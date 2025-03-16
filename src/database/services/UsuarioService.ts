@@ -17,9 +17,13 @@ export class UsuarioService {
   async getUsuarios(): Promise<Usuario[]> {
     return await this.usuarioRepository.find();
   }
-
+  
   async getUsuarioById(id: number): Promise<Usuario | null> {
     return await this.usuarioRepository.findOneBy({ user_id: id });
+  }
+
+  async getUsuarioByEmail(email: string): Promise<Usuario | null> {
+    return await this.usuarioRepository.findOneBy({ user_email: email });
   }
 
   async updateUsuario(id: number, data: Partial<Usuario>): Promise<Usuario | null> {

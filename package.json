@@ -15,6 +15,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "firebase": "^11.4.0",
+    "firebase-admin": "^13.2.0",
     "pg": "^8.14.0",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.21"
