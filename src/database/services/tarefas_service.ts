@@ -1,7 +1,6 @@
 import { NumericType } from "typeorm";
-import { Tarefa } from "../database/entities/Tarefa";
-import { AppDataSource } from "../ormconfig";
-
+import { Tarefa } from "../entities/Tarefa";
+import { AppDataSource } from "../../ormconfig";
 
 
 export class TarefaService{
