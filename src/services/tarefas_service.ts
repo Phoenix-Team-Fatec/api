@@ -1,3 +1,4 @@
+import { NumericType } from "typeorm";
 import { Tarefa } from "../database/entities/Tarefa";
 import { AppDataSource } from "../ormconfig";
 
@@ -30,6 +31,43 @@ export class TarefaService{
 
         return await this.tarefaRepository.save(tarefa)
     }
+
+
+    //função para associar uma tarefa a uma etapa
+    async associateTarefaToEtapa(tarefa_id:number, etapa_id:number):Promise<Tarefa>{
+
+        const tarefa = await this.tarefaRepository.findOneBy({tarefa_id})
+
+        if(tarefa){
+            tarefa.tarefa_id = etapa_id
+        }
+
+        return await this.tarefaRepository.save(tarefa)
+    }
+
+    //função para pegar tarefas em uma etapa
+    async getTarefas(etapa_id:number):Promise<Tarefa[]>{
+
+        if(etapa_id){
+            return await this.tarefaRepository.find({
+                where: {
+                    etapa: {etapa_id}
+                }
+            });
+        }
+    }
+
+
+    //função para deletar uma tarefa
+    async deleteTarefa(tarefa_id:number):Promise<Tarefa>{
+        
+        const tarefa = await this.tarefaRepository.findOneBy({tarefa_id})
+
+        if(tarefa){
+            return await this.tarefaRepository.remove(tarefa)
+        }
+    }
+
 
 
 

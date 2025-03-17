@@ -34,4 +34,49 @@ export class TarefaController{
 
         }
     }
+
+    async associateTarefaToEtapaControl(req:Request, res:Response):Promise<void>{
+
+        try{
+
+            const{tarefa_id, etapa_id} = req.body;
+            const tarefa = await this.tarefaService.associateTarefaToEtapa(tarefa_id, etapa_id)
+            res.status(201).jso
+
+        }catch(error){
+            res.status(400).json({message: error.message})
+
+        }
+    }
+
+
+    async getTarefasControl(req:Request, res:Response):Promise<void>{
+
+        try{
+            const{etapa_id} = req.body
+            const tarefa = await this.tarefaService.getTarefas(etapa_id)
+            res.status(201).jso
+
+        }catch(error){
+            res.status(400).json({message: error.message})
+
+        }
+    }
+
+
+    async deleteTarefaControl(req:Request, res:Response):Promise<void>{
+
+        try{
+            
+            const{id} = req.params
+            const tarefa = await this.tarefaService.deleteTarefa(id)
+            res.status(201).jso
+
+        }catch(error:any){
+            res.status(400).json({message: error.message})
+            }
+    }
+
+
+  
 }
