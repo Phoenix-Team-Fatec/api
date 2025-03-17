@@ -19,7 +19,10 @@ export class TarefaService{
     //função para atualizar uma tarefa
     async updateTarefa(tarefa_id:number,tarefa_nome?:string, tarefa_descricao?:string, tarefa_data_inicio?:Date, tarefa_data_fim?:Date, tarefa_status?: boolean, etapa_id?:number):Promise<Tarefa>{
 
-        const tarefa = await this.tarefaRepository.findOneBy({tarefa_id})
+        const tarefa = await this.tarefaRepository.findOne({
+            where: {tarefa_id}, 
+            relations:["etapa"]
+        })
 
         if(tarefa){
             tarefa.tarefa_nome = tarefa_nome

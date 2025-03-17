@@ -53,8 +53,8 @@ export class TarefaController{
     async getTarefasControl(req:Request, res:Response):Promise<void>{
 
         try{
-            const{etapa_id} = req.body
-            const tarefa = await this.tarefaService.getTarefas(etapa_id)
+            const {etapa_id} = req.params
+            const tarefa = await this.tarefaService.getTarefas(Number(etapa_id))
             res.status(201).json(tarefa)
 
         }catch(error){

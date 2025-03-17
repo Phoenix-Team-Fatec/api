@@ -17,8 +17,8 @@ routes.delete("/usuarios/:id", deleteUsuario);
 
 //TAREFAS
 routes.post("/tarefa", tarefa.createTarefaControl);
-routes.put("/tarefa/update", tarefa.updateTarefaControl);
-routes.get("/tarefa", tarefa.getTarefasControl);
+routes.put("/tarefa", tarefa.updateTarefaControl);
+routes.get("/tarefa/:etapa_id", tarefa.getTarefasControl);
 routes.post("/tarefa/associate", tarefa.associateTarefaUsuarioControl)
 routes.post("/tarefa/remove_usuario", tarefa.removeTarefaUsuarioControl)
 
