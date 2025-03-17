@@ -11,8 +11,8 @@ export class TarefaController{
     async createTarefaControl(req:Request, res:Response):Promise<void>{
         try{
             
-            const{nome, descricao, data_inicio, data_fim, tarefa_status} = req.body;
-            const tarefa = await this.tarefaService.createTarefa(nome, descricao, data_inicio, data_fim, tarefa_status)
+            const{nome, descricao, data_inicio, data_fim, tarefa_status, etapa_id} = req.body;
+            const tarefa = await this.tarefaService.createTarefa(nome, descricao, data_inicio, data_fim, tarefa_status, etapa_id)
             res.status(201).json(tarefa)
 
 
@@ -35,20 +35,7 @@ export class TarefaController{
         }
     }
 
-    async associateTarefaToEtapaControl(req:Request, res:Response):Promise<void>{
-
-        try{
-
-            const{tarefa_id, etapa_id} = req.body;
-            const tarefa = await this.tarefaService.associateTarefaToEtapa(tarefa_id, etapa_id)
-            res.status(201).jso
-
-        }catch(error){
-            res.status(400).json({message: error.message})
-
-        }
-    }
-
+   
 
     async getTarefasControl(req:Request, res:Response):Promise<void>{
 
