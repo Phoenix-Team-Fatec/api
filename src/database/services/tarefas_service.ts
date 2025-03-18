@@ -62,60 +62,7 @@ export class TarefaService{
     }
 
 
-    //função para associar um usuário a uma tarefa
-    async associateTarefaUsuario(tarefa_id:number, user_id:number):Promise<Usuario>{
-
-        const usuario = await this.usuarioRepository.findOne({
-            where: { user_id: user_id },
-            relations: ["tarefas"]
-        });
-
-        if(!usuario){
-            throw new Error("Usuário não encontrado");
-        }
-
-        const tarefa = await this.tarefaRepository.findOneBy({tarefa_id})
-
-        
-        if (!tarefa) {
-            throw new Error("Etapa não encontrada");
-        }
-
-        usuario.tarefas.push(tarefa)
-
-
-        return await this.usuarioRepository.save(usuario)
-
-    }
-
-
-    //função para remover um usuário de uma tarefa
-    async removeTarefaUsuario(tarefa_id:number, user_id:number):Promise<Usuario>{
-
-        const usuario = await this.usuarioRepository.findOne({
-            where: { user_id: user_id },
-            relations: ["tarefas"]
-        });
-
-        if(!usuario){
-            throw new Error("Usuário não encontrado");
-        }
-
-        const tarefa = await this.tarefaRepository.findOneBy({tarefa_id})
-
-        
-        if (!tarefa) {
-            throw new Error("Etapa não encontrada");
-        }
-
-        usuario.tarefas = usuario.tarefas.filter(t => t.tarefa_id != tarefa_id)
-
-
-        return await this.usuarioRepository.save(usuario)
-
-    }
-
-
+   
 
 
 

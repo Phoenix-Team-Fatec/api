@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { createUsuario, deleteUsuario, getUsuarioById, getUsuarios, loginUsuario, resetPassword, updateUsuario } from "./controllers/UsuarioController";
 import { TarefaController } from "./controllers/tarefa_controller";
+import { TarefaUsuarioController } from "./controllers/tarefa_usuarioController";
 
 const routes = Router();
 const tarefa = new TarefaController()
+const tarefa_user = new TarefaUsuarioController()
 
 //USUARIO
 routes.post("/usuarios", createUsuario);
@@ -19,8 +21,14 @@ routes.delete("/usuarios/:id", deleteUsuario);
 routes.post("/tarefa", tarefa.createTarefaControl);
 routes.put("/tarefa", tarefa.updateTarefaControl);
 routes.get("/tarefa/:etapa_id", tarefa.getTarefasControl);
-routes.post("/tarefa/associate", tarefa.associateTarefaUsuarioControl)
-routes.post("/tarefa/remove_usuario", tarefa.removeTarefaUsuarioControl)
+
+
+
+//TAREFAS_USUARIO
+
+routes.post("/tarefa_usuario/associate", tarefa_user.associateTarefaUsuarioControl)
+routes.post("/tarefa_usuario/remove_usuario", tarefa_user.removeTarefaUsuarioControl)
+routes.get("/tarefa_usuario/:usuario_id", tarefa_user.getTarefaUsuarioControl)
 
 
 

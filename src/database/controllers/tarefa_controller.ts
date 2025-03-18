@@ -15,8 +15,6 @@ export class TarefaController{
         this.updateTarefaControl = this.updateTarefaControl.bind(this);
         this.getTarefasControl = this.getTarefasControl.bind(this);
         this.deleteTarefaControl = this.deleteTarefaControl.bind(this);
-        this.associateTarefaUsuarioControl = this.associateTarefaUsuarioControl.bind(this);
-        this.removeTarefaUsuarioControl = this.removeTarefaUsuarioControl.bind(this);
     }
 
 
@@ -78,33 +76,7 @@ export class TarefaController{
     }
 
 
-    async associateTarefaUsuarioControl(req:Request, res:Response):Promise<void>{
-
-        try{
-
-            const{tarefa_id, usuario_id} = req.body
-            const tarefa_usuario = await this.tarefaService.associateTarefaUsuario(tarefa_id, usuario_id)
-            res.status(201).json(tarefa_usuario)
-
-        }catch(error:any){
-            res.status(400).json({message: error.message})
-
-        }
-    }
-
-    async removeTarefaUsuarioControl(req:Request, res:Response):Promise<void>{
-
-        try{
-
-            const{tarefa_id, usuario_id} = req.body
-            const tarefa_usuario = await this.tarefaService.removeTarefaUsuario(tarefa_id, usuario_id)
-            res.status(201).json(tarefa_usuario)
-
-        }catch(error:any){
-            res.status(400).json({message: error.message})
-
-        }
-    }
+    
 
 
     
