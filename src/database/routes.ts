@@ -3,11 +3,13 @@ import { createUsuario, deleteUsuario, getUsuarioById, getUsuarios, loginUsuario
 import { TarefaController } from "./controllers/tarefa_controller";
 import { TarefaUsuarioController } from "./controllers/tarefa_usuarioController";
 import { ProjetoController } from "./controllers/ProjetoController";
+import { RelUserProjetoController } from "./controllers/RelUserProjetoController";
 
 const routes = Router();
 const tarefa = new TarefaController()
 const tarefa_user = new TarefaUsuarioController()
 const projeto = new ProjetoController()
+const relUserProj = new RelUserProjetoController()
 
 //USUARIO
 routes.post("/usuarios", createUsuario);
@@ -24,6 +26,12 @@ routes.get('/projeto/getAll', projeto.getAllProjeto)
 routes.get('/projeto/getById/:id', projeto.getProjetoById)
 routes.put('/projeto/update/:id', projeto.updateProjeto)
 routes.put('/projeto/delete/:id', projeto.deleteProjeto)
+
+//REL_USER_PROJETO
+routes.post('/relUserProj', relUserProj.createRelUserProjeto)
+routes.get('/relUserProj/getProjs/:user_id', relUserProj.getRelUserProjetoByUser)
+routes.get('/relUserProj/getUsers/:proj_id', relUserProj.getRelUserProjetoByProjeto)
+routes.delete('/relUserProj', relUserProj.deleteRelUserProjeto)
 
 //TAREFAS
 routes.post("/tarefa", tarefa.createTarefaControl);

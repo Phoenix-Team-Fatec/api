@@ -14,7 +14,8 @@ export class RelUserProjeto{
 
     @Column({
         type: "boolean",
-        nullable: false
+        nullable: false,
+        default: false
     })
-    coordernador!: boolean
+    coordenador!: boolean
 }
