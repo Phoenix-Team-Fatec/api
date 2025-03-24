@@ -5,7 +5,7 @@ import { Subtarefa } from "./Subtarefa"
 import { Tarefa } from "./Tarefa"
 
 @Entity()
-export class Usuario{
+export class Usuario {
     @PrimaryGeneratedColumn()
     user_id!: number
 
@@ -18,11 +18,25 @@ export class Usuario{
 
     @Column({
         type: "varchar",
+        length: 30,
+        nullable: true,
+    })
+    user_sobrenome!: string;
+
+    @Column({
+        type: "varchar",
         length: 100,
         nullable: false,
         unique: true
     })
     user_email!: string
+
+    @Column({
+        type: "varchar",
+        length: 255,
+        nullable: true,
+    })
+    user_foto!: string;
 
     @ManyToMany(() => Etapa, etapa => etapa.usuarios)
     @JoinTable({

@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
-import { admin, getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "../conifg/firebase.cjs"
+import { admin, getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "../config/firebase.cjs"
 import { UsuarioService } from "../services/UsuarioService";
+import { File } from "multer";
+
+interface MulterRequest extends Request {
+    file?: File;
+}
 
 const usuarioService = new UsuarioService();
 
-export const createUsuario = async (req: Request, res: Response): Promise<Response> => {
+export const createUsuario = async (req: MulterRequest, res: Response): Promise<Response> => {
     try {
         const { user_email, password } = req.body;
 
@@ -13,9 +18,21 @@ export const createUsuario = async (req: Request, res: Response): Promise<Respon
             return res.status(400).json({ error: "Já existe um usuário com esse email" });
         }
 
+        if (req.file) {
+            req.body.user_foto = `http://localhost:3000/uploads/`+req.file.filename;
+        }
+
         const usuario = await usuarioService.createUsuario(req.body);
 
-        await createUserWithEmailAndPassword(getAuth(), user_email, password);
+        try {
+            await createUserWithEmailAndPassword(getAuth(), user_email, password);
+        } catch (firebaseError) {
+            await usuarioService.deleteUsuario(usuario.user_id);
+            return res.status(500).json({
+                error: "Erro ao criar usuário no Firebase",
+                details: firebaseError
+            });
+        }
 
         return res.status(201).json(usuario);
     } catch (error) {

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { uploadUserFoto } from "../middlewares/upload";
 import { createUsuario, deleteUsuario, getUsuarioById, getUsuarios, loginUsuario, resetPassword, updateUsuario } from "./controllers/UsuarioController";
 import { TarefaController } from "./controllers/tarefa_controller";
 import { TarefaUsuarioController } from "./controllers/tarefa_usuarioController";
@@ -12,7 +13,7 @@ const projeto = new ProjetoController()
 const relUserProj = new RelUserProjetoController()
 
 //USUARIO
-routes.post("/usuarios", createUsuario);
+routes.post("/usuarios", uploadUserFoto, createUsuario);
 routes.post("/usuarios/login", loginUsuario);
 routes.post("/usuarios/reset-password", resetPassword);
 routes.get("/usuarios", getUsuarios);
