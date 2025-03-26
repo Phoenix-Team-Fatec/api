@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne,OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import { Etapa } from "./Etapa"
 import { Usuario } from "./Usuario"
+import { AreaAtuacao } from "./AreaAtuacao"
 
 @Entity()
 export class Projeto{
@@ -20,12 +21,12 @@ export class Projeto{
     })
     proj_descricao!: string
 
-    @Column({
-        type: "varchar",
-        length: 50,
-        nullable: false
-    })
-    proj_area_atuacao!: string
+    // @Column({
+    //     type: "varchar",
+    //     length: 50,
+    //     nullable: false
+    // })
+    // proj_area_atuacao!: string
 
     @Column({
         type: "date",
@@ -48,6 +49,11 @@ export class Projeto{
         nullable: false
     })
     proj_excluido!: boolean
+
+
+    @ManyToOne(() => AreaAtuacao, areaAtuacao => areaAtuacao.projeto, { nullable: true })
+    @JoinColumn({ name: "area_atuacao_id" })
+    area_atuacao!: AreaAtuacao | null;
 
     @OneToMany(() => Etapa, etapa => etapa.projeto)
     etapas!: Etapa[]

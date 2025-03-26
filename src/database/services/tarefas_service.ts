@@ -6,7 +6,7 @@ import { AppDataSource } from "../../ormconfig";
 export class TarefaService{
 
     private tarefaRepository = AppDataSource.getRepository(Tarefa)
-    private usuarioRepository = AppDataSource.getRepository(Usuario)
+    
 
     //função para criar uma tarefa
     async createTarefa(tarefa_nome:string, tarefa_descricao:string, tarefa_data_inicio:Date, tarefa_data_fim:Date, tarefa_status: boolean, etapa_id:number):Promise<Tarefa>{

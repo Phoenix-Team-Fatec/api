@@ -1,12 +1,16 @@
+import { AreaAtuacao } from "../entities/AreaAtuacao"
 import { ProjetoService } from "../services/ProjetoService"
+import { AreaAtuacaoService } from "../services/areaAtuacaoService"
 import { Request, Response } from "express"
 
 
 export class ProjetoController{
     private service: ProjetoService
+    private areaAtuacaoService: AreaAtuacaoService
 
     constructor(){
         this.service = new ProjetoService()
+        this.areaAtuacaoService = new AreaAtuacaoService()
 
         this.createProjeto = this.createProjeto.bind(this)
         this.getAllProjeto = this.getAllProjeto.bind(this)
@@ -17,12 +21,24 @@ export class ProjetoController{
 
     async createProjeto(req: Request, res: Response): Promise<Response>{
         const date = new Date()
+
+        let area_atuacao = null
+
+        if (req.body.area_atuacao_id){
+            area_atuacao = await this.areaAtuacaoService.getAreaAtuacaoById(req.body.area_atuacao_id)
+            if(!area_atuacao){
+                return res.status(404).json({error:"Área de atuação não econtrada."})
+            }
+        }
+        
         const new_data = {
             ...req.body,
             proj_data_inicio: date,
             proj_data_fim: date,
             proj_excluido: false,
-            proj_status: 0
+            proj_status: 0,
+            area_atuacao
+
         }
         try {
             const project = await this.service.createProjeto(new_data)
@@ -51,7 +67,7 @@ export class ProjetoController{
             return res.status(200).json(project)
 
         } catch (error) {
-            return res.status(500).json({error: `Erro ao procurar usuario de id: ${id}`, details: error})
+            return res.status(500).json({error: `Erro ao procurar projeto de id: ${id}`, details: error})
         }
     }
 
@@ -59,11 +75,29 @@ export class ProjetoController{
         const id = Number(req.params.id)
         
         try {
-            const updatedProject = await this.service.updateProjeto(id, req.body)
+
+            let area_atuacao = null
+
+            if(req.body.area_atuacao_id){
+                area_atuacao = await this.areaAtuacaoService.getAreaAtuacaoById(req.body.area_atuacao_id)
+
+                if(!area_atuacao){
+                    return res.status(404).json({ error: "Área de atuação não encontrada" });
+                }
+            }   
+
+            console.log(area_atuacao)
+
+            const updateData = {
+                ...req.body,
+                area_atuacao
+            }
+
+            const updatedProject = await this.service.updateProjeto(id, updateData)
             return res.status(200).json(updatedProject)
 
         } catch (error) {
-            res.status(500).json({error: 'Erro ao atualizar o usuário', details: error})
+            res.status(500).json({error: 'Erro ao atualizar o projeto', details: error})
         }
     }
     

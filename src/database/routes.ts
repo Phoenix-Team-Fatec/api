@@ -4,12 +4,14 @@ import { TarefaController } from "./controllers/tarefa_controller";
 import { TarefaUsuarioController } from "./controllers/tarefa_usuarioController";
 import { ProjetoController } from "./controllers/ProjetoController";
 import { RelUserProjetoController } from "./controllers/RelUserProjetoController";
+import { AreaAtuacaoController } from "./controllers/areaAtuacaoController";
 
 const routes = Router();
 const tarefa = new TarefaController()
 const tarefa_user = new TarefaUsuarioController()
 const projeto = new ProjetoController()
 const relUserProj = new RelUserProjetoController()
+const area_atuacao = new AreaAtuacaoController()
 
 //USUARIO
 routes.post("/usuarios", createUsuario);
@@ -42,5 +44,14 @@ routes.get("/tarefa/:etapa_id", tarefa.getTarefasControl);
 routes.post("/tarefa_usuario/associate", tarefa_user.associateTarefaUsuarioControl)
 routes.post("/tarefa_usuario/remove_usuario", tarefa_user.removeTarefaUsuarioControl)
 routes.get("/tarefa_usuario/:usuario_id", tarefa_user.getTarefaUsuarioControl)
+
+//AREAS DE ATUAÇÃO
+routes.post("/area_atuacao", area_atuacao.createAreaAtuacaoControl);
+routes.put("/area_atuacao", area_atuacao.updateAreaAtuacaoControl);
+routes.get("/area_atuacao", area_atuacao.getAreaAtuacaoControl);
+routes.get("/area_atuacao/projeto/:proj_id", area_atuacao.getAreaAtuacaoByProjetoIdControl);
+routes.delete("/area_atuacao/:area_atuacao_id", area_atuacao.getAreaAtuacaoControl);
+
+
 
 export { routes };
