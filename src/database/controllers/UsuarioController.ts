@@ -19,7 +19,7 @@ export const createUsuario = async (req: MulterRequest, res: Response): Promise<
         }
 
         if (req.file) {
-            req.body.user_foto = `http://localhost:3000/uploads/`+req.file.filename;
+            req.body.user_foto = `http://localhost:3000/uploads/` + req.file.filename;
         }
 
         const usuario = await usuarioService.createUsuario(req.body);
@@ -44,11 +44,16 @@ export const loginUsuario = async (req: Request, res: Response): Promise<Respons
     try {
         const { user_email, password } = req.body;
 
+        const existingUser = await usuarioService.getUsuarioByEmail(user_email);
+        if (!existingUser) {
+            return res.status(400).json({ error: "User not found" });
+        }
+
         const userCredential = await signInWithEmailAndPassword(getAuth(), user_email, password);
 
         return res.status(200).json({
             message: "Login efetuado com sucesso",
-            user: userCredential.user,
+            user: existingUser,
         });
     } catch (error) {
         return res.status(401).json({
