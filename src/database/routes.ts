@@ -38,29 +38,22 @@ routes.delete('/relUserProj', relUserProj.deleteRelUserProjeto)
 
 //ETAPAS
 // Criar uma etapa
-routes.post("/etapas", (req, res) => etapaController.createEtapaControl(req, res));
+routes.post("/etapas", etapaController.createEtapaControl);
 
 // Atualizar uma etapa
-routes.put("/etapas", (req, res) => etapaController.updateEtapaControl(req, res));
+routes.put("/etapas", etapaController.updateEtapaControl);
 
 // Remover uma etapa pelo ID
-routes.delete("/etapas/:etapaId", (req, res) => etapaController.deleteEtapaControl(req, res));
+routes.delete("/etapas/:etapaId", etapaController.deleteEtapaControl);
 
 // Listar todas as etapas (VERIFIQUE SE ESSE TRECHO EXISTE)
-routes.get("/etapas/:proj_id", async (req, res) => {
-    try {
-        const etapas = await etapaController.getAllEtapas(req, res);
-        res.status(200).json(etapas);
-    } catch (error: any) {
-        res.status(400).json({ message: error.message });
-    }
-});
+routes.get("/etapas/:proj_id", etapaController.getAllEtapas);
 
 // Atribuir usuário a uma etapa
-routes.post("/etapas/assign", (req, res) => etapaController.assignUserToEtapaControl(req, res));
+routes.post("/etapas/assign", etapaController.assignUserToEtapaControl);
 
 // Remover usuário de uma etapa
-routes.delete("/etapas/remove", (req, res) => etapaController.removeUserFromEtapaControl(req, res));
+routes.delete("/etapas/remove", etapaController.removeUserFromEtapaControl);
 
 
 //TAREFAS

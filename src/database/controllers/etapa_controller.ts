@@ -4,6 +4,17 @@ import { EtapaService } from "../services/etapa_service";
 export class EtapaController {
     private etapaService = new EtapaService();
 
+    constructor(){
+        this.etapaService = new EtapaService()
+
+        this.assignUserToEtapaControl = this.assignUserToEtapaControl.bind(this)
+        this.createEtapaControl = this.createEtapaControl.bind(this)
+        this.deleteEtapaControl = this.deleteEtapaControl.bind(this)
+        this.getAllEtapas = this.getAllEtapas.bind(this)
+        this.removeUserFromEtapaControl = this.removeUserFromEtapaControl.bind(this)
+        this.updateEtapaControl = this.updateEtapaControl.bind(this)
+    }
+
     // Criar uma etapa
     async createEtapaControl(req: Request, res: Response): Promise<void> {
         try {
