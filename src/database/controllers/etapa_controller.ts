@@ -50,7 +50,8 @@ export class EtapaController {
 
     async getAllEtapas(req: Request, res: Response): Promise<void> {
         try {
-            const etapas = await this.etapaService.getAllEtapas();
+            const{proj_id} = req.params
+            const etapas = await this.etapaService.getAllEtapas(Number(proj_id));
             res.status(200).json(etapas);
         } catch (error: any) {
             res.status(500).json({ message: error.message });

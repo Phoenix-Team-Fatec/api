@@ -14,7 +14,7 @@ etapaRoutes.put("/etapas", (req, res) => etapaController.updateEtapaControl(req,
 etapaRoutes.delete("/etapas/:etapaId", (req, res) => etapaController.deleteEtapaControl(req, res));
 
 // Listar todas as etapas (VERIFIQUE SE ESSE TRECHO EXISTE)
-etapaRoutes.get("/etapas", async (req, res) => {
+etapaRoutes.get("/etapas/:proj_id", async (req, res) => {
     try {
         const etapas = await etapaController.getAllEtapas(req, res);
         res.status(200).json(etapas);

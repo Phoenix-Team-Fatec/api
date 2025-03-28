@@ -93,10 +93,13 @@ export class EtapaService {
         await this.usuarioRepository.save(usuario);
     }
 
-    async getAllEtapas(): Promise<Etapa[]> {
-        return await this.etapaRepository.find({ relations: ["projeto", "tarefas", "usuarios"] });
+    async getAllEtapas(proj_id: number): Promise<Etapa[]> {
+        return await this.etapaRepository.find({ 
+            where: { projeto: { proj_id } }, // Correção aqui
+            relations: ["tarefas", "usuarios"] 
+        });
     }
-
+    
     // Remover uma etapa pelo ID
     async deleteEtapa(etapaId: number): Promise<void> {
         const etapa = await this.etapaRepository.findOneBy({ etapa_id: etapaId });
