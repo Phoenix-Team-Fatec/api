@@ -23,7 +23,7 @@ export class Projeto{
     @Column({
         type: "varchar",
         length: 50,
-        nullable: false
+        nullable: true
     })
     proj_area_atuacao!: string
 

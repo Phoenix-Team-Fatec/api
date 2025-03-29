@@ -17,6 +17,7 @@ export class RelUserProjetoController {
         const { user_id, proj_id, coordenador } = req.body
 
         try {
+            console.log(user_id, proj_id, coordenador)
             const relation = await this.service.createRelUserProjeto(Number(user_id), Number(proj_id), Boolean(coordenador))
             res.status(201).json(relation)
         } catch (error) {
