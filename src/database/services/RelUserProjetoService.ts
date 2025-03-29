@@ -44,17 +44,33 @@ export class RelUserProjetoService{
         })
     }
 
-    async getRelUserProjetoByUser(user_id: number): Promise<Projeto[]>{
-        const user = await this.userRepo.findOne({
-            where: { user_id },
-            relations: ['projetos']
-        })
-        if (!user){
-            throw new Error("Usuário não encontrado")
-        }
-
-        return user.projetos
+    async getRelUserProjetoByUser(user_id: number): Promise<any[]> {
+        const projetos = await this.projRepo
+            .createQueryBuilder("projeto")
+            .innerJoin(
+                RelUserProjeto,
+                "relUserProj",
+                "relUserProj.proj_id = projeto.proj_id"
+            )
+            .innerJoin(Usuario, "usuario", "usuario.user_id = relUserProj.user_id")
+            .where("usuario.user_id = :user_id", { user_id })
+            .andWhere("projeto.proj_excluido = false")
+            .select([
+                "projeto.proj_id",
+                "projeto.proj_nome",
+                "projeto.proj_descricao",
+                "projeto.proj_area_atuacao",
+                "projeto.proj_data_inicio",
+                "projeto.proj_data_fim",
+                "projeto.proj_status",
+                "relUserProj.coordenador"
+            ])
+            .getRawMany();
+    
+        return projetos;
     }
+    
+    
 
     async getRelUserProjetoByProjeto(proj_id: number): Promise<Usuario[]> {
         const project = await this.projRepo.findOne({
