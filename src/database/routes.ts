@@ -28,7 +28,7 @@ routes.post('/projeto', projeto.createProjeto)
 routes.get('/projeto/getAll', projeto.getAllProjeto)
 routes.get('/projeto/getById/:id', projeto.getProjetoById)
 routes.put('/projeto/update/:id', projeto.updateProjeto)
-routes.put('/projeto/delete/:id', projeto.deleteProjeto)
+routes.delete('/projeto/delete/:id', projeto.deleteProjeto)
 
 //REL_USER_PROJETO
 routes.post('/relUserProj', relUserProj.createRelUserProjeto)
