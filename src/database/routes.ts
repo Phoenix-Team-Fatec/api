@@ -46,7 +46,7 @@ routes.put("/etapas", etapaController.updateEtapaControl);
 // Remover uma etapa pelo ID
 routes.delete("/etapas/:etapaId", etapaController.deleteEtapaControl);
 
-// Listar todas as etapas (VERIFIQUE SE ESSE TRECHO EXISTE)
+// Listar todas as etapas 
 routes.get("/etapas/:proj_id", etapaController.getAllEtapas);
 
 // Atribuir usuário a uma etapa

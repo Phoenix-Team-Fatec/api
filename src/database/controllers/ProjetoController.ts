@@ -28,7 +28,11 @@ export class ProjetoController{
         }
         try {
             const project = await this.service.createProjeto(new_data)
-            return res.status(201).json(project)
+            return res.status(201).json({
+                success: true,
+                message: "Projeto criado com sucesso",
+                data: project
+            })
 
         } catch (error) {
             return res.status(500).json({error: "Erro ao criar projeto", details: error})
