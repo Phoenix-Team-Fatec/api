@@ -30,11 +30,12 @@ export class ProjetoController{
                 return res.status(404).json({error:"Área de atuação não econtrada."})
             }
         }
+        // const [day, month, year] = req.body.proj_data_fim.split('/')
         
         const new_data = {
             ...req.body,
             proj_data_inicio: date,
-            proj_data_fim: date,
+            proj_data_fim: "01-01-1999",
             proj_excluido: false,
             proj_status: 0,
             area_atuacao

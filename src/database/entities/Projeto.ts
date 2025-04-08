@@ -27,6 +27,12 @@ export class Projeto{
     //     nullable: false
     // })
     // proj_area_atuacao!: string
+    @Column({
+        type: "varchar",
+        length: 50,
+        nullable: true
+    })
+    proj_area_atuacao!: string
 
     @Column({
         type: "date",
