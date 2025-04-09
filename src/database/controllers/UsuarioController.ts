@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { admin, getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "../config/firebase.cjs"
 import { UsuarioService } from "../services/UsuarioService";
+import { Usuario } from "../entities/Usuario";
 import { File } from "multer";
 
 interface MulterRequest extends Request {
@@ -12,9 +13,9 @@ const usuarioService = new UsuarioService();
 export const createUsuario = async (req: MulterRequest, res: Response): Promise<Response> => {
     try {
         const { user_email, password } = req.body;
-
+        
         const existingUser = await usuarioService.getUsuarioByEmail(user_email);
-        if (existingUser) {
+        if (existingUser && existingUser.registrado) {
             return res.status(400).json({ error: "Já existe um usuário com esse email" });
         }
 
@@ -22,7 +23,16 @@ export const createUsuario = async (req: MulterRequest, res: Response): Promise<
             req.body.user_foto = `http://localhost:3000/uploads/` + req.file.filename;
         }
 
-        const usuario = await usuarioService.createUsuario(req.body);
+        let usuario: Usuario;
+
+        if (existingUser && !existingUser.registrado) {
+            usuario = await usuarioService.updateUsuario(existingUser.user_id, {
+                ...req.body,
+                registrado: true
+            });
+        } else {
+            usuario = await usuarioService.createUsuario(req.body);
+        }
 
         try {
             await createUserWithEmailAndPassword(getAuth(), user_email, password);

@@ -17,7 +17,7 @@ export class UsuarioService {
   async getUsuarios(): Promise<Usuario[]> {
     return await this.usuarioRepository.find();
   }
-  
+
   async getUsuarioById(id: number): Promise<Usuario | null> {
     return await this.usuarioRepository.findOneBy({ user_id: id });
   }
@@ -27,8 +27,10 @@ export class UsuarioService {
   }
 
   async updateUsuario(id: number, data: Partial<Usuario>): Promise<Usuario | null> {
-    await this.usuarioRepository.update(id, data);
-    return await this.getUsuarioById(id);
+    const usuario = await this.getUsuarioById(id);
+    if (!usuario) return null;
+    Object.assign(usuario, data);
+    return await this.usuarioRepository.save(usuario);
   }
 
   async deleteUsuario(id: number): Promise<void> {
