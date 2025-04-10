@@ -15,7 +15,8 @@ export class RelUserProjetoService{
         this.relUserProj = AppDataSource.getRepository(RelUserProjeto)
     }
 
-    async createRelUserProjeto(user_id: number, proj_id: number, coordenador: boolean): Promise<Usuario> {
+    async createRelUserProjeto(user_id: number, proj_id: number, coordenador: string): Promise<Usuario> {
+        let boolCoord = Boolean(coordenador)
         const user = await this.userRepo.findOne({
             where: { user_id},
             relations: ['projetos']
@@ -34,7 +35,7 @@ export class RelUserProjetoService{
         const relation = this.relUserProj.create({
             user_id,
             proj_id,
-            coordenador
+            coordenador: boolCoord
         })
 
         await this.relUserProj.save(relation)
@@ -45,16 +46,24 @@ export class RelUserProjetoService{
     }
 
     async getRelUserProjetoByUser(user_id: number): Promise<any[]> {
-        const projetos = await this.projRepo
+        return await this.projRepo
             .createQueryBuilder("projeto")
             .innerJoin(
                 RelUserProjeto,
                 "relUserProj",
-                "relUserProj.proj_id = projeto.proj_id"
+                "relUserProj.proj_id = projeto.proj_id AND relUserProj.user_id = :user_id",
+                { user_id }
             )
-            .innerJoin(Usuario, "usuario", "usuario.user_id = relUserProj.user_id")
-            .where("usuario.user_id = :user_id", { user_id })
-            .andWhere("projeto.proj_excluido = false")
+            .leftJoin(
+                RelUserProjeto,
+                "relUsersProj",
+                "relUsersProj.proj_id = projeto.proj_id"
+            )
+            .leftJoin(
+                Usuario,
+                "usuario",
+                "usuario.user_id = relUsersProj.user_id"
+            )
             .select([
                 "projeto.proj_id",
                 "projeto.proj_nome",
@@ -63,11 +72,19 @@ export class RelUserProjetoService{
                 "projeto.proj_data_inicio",
                 "projeto.proj_data_fim",
                 "projeto.proj_status",
-                "relUserProj.coordenador"
+                "projeto.proj_excluido",
+                "relUserProj.coordenador as is_coordenador",
+                "JSON_AGG(DISTINCT jsonb_build_object(" +
+                    "'user_id', usuario.user_id, " +
+                    "'user_nome', usuario.user_nome, " +
+                    "'user_sobrenome', usuario.user_sobrenome, " +
+                    "'user_email', usuario.user_email, " +
+                    "'user_foto', usuario.user_foto, " +
+                    "'coordenador', relUsersProj.coordenador" +
+                ")) as usuarios"
             ])
+            .groupBy("projeto.proj_id, relUserProj.coordenador")
             .getRawMany();
-    
-        return projetos;
     }
     
     

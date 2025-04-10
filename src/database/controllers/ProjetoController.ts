@@ -16,16 +16,17 @@ export class ProjetoController{
     }
 
     async createProjeto(req: Request, res: Response): Promise<Response>{
-        const date = new Date()
-        // const [day, month, year] = req.body.proj_data_fim.split('/')
         
         const new_data = {
-            ...req.body,
-            proj_data_inicio: date,
-            proj_data_fim: "01-01-1999",
+            proj_nome: req.body.proj_nome, // Corrigido para pegar o campo correto
+            proj_descricao: req.body.proj_descricao,
+            proj_area_atuacao: req.body.proj_area_atuacao,
+            proj_data_inicio: new Date(req.body.proj_data_inicio),
+            proj_data_fim: new Date(req.body.proj_data_fim),
             proj_excluido: false,
             proj_status: 0
-        }
+          };
+
         try {
             const project = await this.service.createProjeto(new_data)
             return res.status(201).json(project)

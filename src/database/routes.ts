@@ -28,7 +28,8 @@ routes.post('/projeto', projeto.createProjeto)
 routes.get('/projeto/getAll', projeto.getAllProjeto)
 routes.get('/projeto/getById/:id', projeto.getProjetoById)
 routes.put('/projeto/update/:id', projeto.updateProjeto)
-routes.delete('/projeto/delete/:id', projeto.deleteProjeto)
+//é para deixar como put, pois o delete apenas muda um campo
+routes.put('/projeto/delete/:id', projeto.deleteProjeto)
 
 //REL_USER_PROJETO
 routes.post('/relUserProj', relUserProj.createRelUserProjeto)
