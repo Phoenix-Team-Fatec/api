@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../ormconfig";
 import { Subtarefa } from "../entities/Subtarefa";
-// import { Tarefa } from "../entities/Tarefa";
+import { Tarefa } from "../entities/Tarefa";
 
 
 
@@ -41,9 +41,9 @@ export class SubtarefaService{
 
         const subtarefas = await this.subtarefaRepo.find({
             where:{tarefa:{tarefa_id}},
-            relations: ['tarefa']
         })
 
+        
 
         if (subtarefas){
             return subtarefas

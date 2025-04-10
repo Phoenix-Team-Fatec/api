@@ -44,8 +44,9 @@ export class TarefaService{
         if(etapa_id){
             return await this.tarefaRepository.find({
                 where: {
-                    etapa: {etapa_id}
-                }
+                    etapa: {etapa_id},
+                },
+                relations:['tarefa']
             });
         }
     }

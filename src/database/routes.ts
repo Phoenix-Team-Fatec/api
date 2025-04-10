@@ -7,6 +7,8 @@ import { ProjetoController } from "./controllers/ProjetoController";
 import { RelUserProjetoController } from "./controllers/RelUserProjetoController";
 import { AreaAtuacaoController } from "./controllers/areaAtuacaoController";
 import { EtapaController } from "./controllers/etapa_controller";
+import { SubtarefaController } from "./controllers/subtarefaController";
+import { Subtarefa_UserController } from "./controllers/subtarefa_userController";
 
 const routes = Router();
 const tarefa = new TarefaController()
@@ -15,6 +17,8 @@ const projeto = new ProjetoController()
 const relUserProj = new RelUserProjetoController()
 const area_atuacao = new AreaAtuacaoController()
 const etapaController = new EtapaController();
+const subtarefa = new SubtarefaController();
+const subtarefa_user = new Subtarefa_UserController();
 
 //USUARIO
 routes.post("/usuarios", uploadUserFoto, createUsuario);
@@ -76,5 +80,18 @@ routes.get("/area_atuacao/projeto/:proj_id", area_atuacao.getAreaAtuacaoByProjet
 routes.delete("/area_atuacao/:area_atuacao_id", area_atuacao.getAreaAtuacaoControl);
 
 
+//SUBTAREFAS
+routes.post("/subtarefa", subtarefa.createSubtarefaControl)
+routes.get("/subtarefa/getOne/:subtarefa_id", subtarefa.getOneSubtarefaControl)
+routes.get("/subtarefa/:tarefa_id", subtarefa.getSubtarefasControl)
+routes.put("/subtarefa", subtarefa.updateSubtarefaControl)
+routes.delete("/subtarefa/:subtarefa_id", subtarefa.deleteSubtarefaControl)
 
-export { routes };
+
+//SUBTAREFAS_USUARIO
+routes.post("/subtarefa_usuario/associate", subtarefa_user.associateSubtarefaUsuarioControl)
+routes.post("/subtarefa_usuario/remove_usuario", subtarefa_user.removeSubTarefaUsuarioControl)
+routes.get("/subtarefa_usuario/:user_id", subtarefa_user.getSubtarefasUsuarioControl)
+
+
+export { routes };  

@@ -26,8 +26,8 @@ export class SubtarefaController{
         try{
             
             const{nome, descricao, data_inicio, data_fim, subtarefa_status, tarefa_id} = req.body;
-            const subtarefa = this.subtarefaService.createSubtarefa(nome, descricao, data_inicio, data_fim, subtarefa_status, tarefa_id)
-            res.status(201).json(subtarefa)
+            const subtarefa = await this.subtarefaService.createSubtarefa(nome, descricao, data_inicio, data_fim, subtarefa_status, tarefa_id)
+            res.status(200).json(subtarefa)
         }catch(error:any){
             res.status(400).json({message: error.message})
 
@@ -41,8 +41,8 @@ export class SubtarefaController{
         try{
 
             const {subtarefa_id} = req.params
-            const subtarefa = this.subtarefaService.getOneSubtarefa(Number(subtarefa_id))
-            res.status(201).json(subtarefa)
+            const subtarefa = await this.subtarefaService.getOneSubtarefa(Number(subtarefa_id))
+            res.status(200).json(subtarefa)
          }catch(error){
             res.status(400).json({message: error.message})
             
@@ -53,8 +53,8 @@ export class SubtarefaController{
 
         try{
             const {tarefa_id} = req.params
-            const subtarefas = this.subtarefaService.getSubtarefas(Number(tarefa_id))
-            res.status(201).json(subtarefas)
+            const subtarefas = await this.subtarefaService.getSubtarefas(Number(tarefa_id))
+            res.status(200).json(subtarefas)
         }catch(error){
             res.status(400).json({message: error.message})
         }
@@ -65,7 +65,7 @@ export class SubtarefaController{
 
         try{
             const{subtarefa_id,nome, descricao, data_inicio, data_fim, subtarefa_status, tarefa_id} = req.body;
-            const subtarefa = this.subtarefaService.updateSubtarefa(subtarefa_id,nome, descricao, data_inicio, data_fim, subtarefa_status, tarefa_id)
+            const subtarefa = await this.subtarefaService.updateSubtarefa(subtarefa_id,nome, descricao, data_inicio, data_fim, subtarefa_status, tarefa_id)
             res.status(201).json(subtarefa)
         }catch(error){
             res.status(400).json({message: error.message})
@@ -78,7 +78,7 @@ export class SubtarefaController{
 
         try{
             const{subtarefa_id} = req.params
-            const subtarefa = this.subtarefaService.deleteSubtarefa(Number(subtarefa_id))
+            const subtarefa = await this.subtarefaService.deleteSubtarefa(Number(subtarefa_id))
             res.status(201).json(subtarefa)
         }catch(error){
             res.status(400).json({message: error.message})
