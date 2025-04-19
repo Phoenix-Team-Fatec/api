@@ -38,6 +38,13 @@ export class Usuario {
     })
     user_foto!: string;
 
+    @Column({
+        type: "boolean",
+        default: true,
+    })
+    registrado!: boolean;
+
+
     @ManyToMany(() => Etapa, etapa => etapa.usuarios)
     @JoinTable({
         name: "rel_user_etapa",
