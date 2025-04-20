@@ -46,7 +46,7 @@ export class TarefaService{
                 where: {
                     etapa: {etapa_id},
                 },
-                relations:['tarefa']
+                relations:['usuarios']
             });
         }
     }

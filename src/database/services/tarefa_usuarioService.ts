@@ -80,6 +80,9 @@ export class TarefaUsuarioService{
     }
 
 
+    //função para selecionar usuários atribuidos a uma tarefa
+
+
 
 
 

@@ -80,4 +80,5 @@ export class SubtarefaService{
             return await this.subtarefaRepo.remove(subtarefa)
         }
     }
+
 }
