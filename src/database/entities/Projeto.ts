@@ -21,12 +21,6 @@ export class Projeto{
     })
     proj_descricao!: string
 
-    // @Column({
-    //     type: "varchar",
-    //     length: 50,
-    //     nullable: false
-    // })
-    // proj_area_atuacao!: string
     @Column({
         type: "varchar",
         length: 50,
@@ -55,6 +49,33 @@ export class Projeto{
         nullable: false
     })
     proj_excluido!: boolean
+
+
+    @Column({
+        type: "text",
+        array: true,
+        nullable: true,
+        default: () => "'{}'"
+    })
+    proj_inst_parceiras!: string[]
+
+
+    @Column({
+        type: "text",
+        array: true,
+        nullable: true,
+        default: () => "'{}'"
+    })
+    proj_inst_financiadoras!: string[]
+
+
+    
+    @Column({
+        type: "double precision",
+        nullable:true
+    })
+    proj_valor_total!: number
+
 
 
     @ManyToOne(() => AreaAtuacao, areaAtuacao => areaAtuacao.projeto, { nullable: true })
