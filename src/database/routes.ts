@@ -66,6 +66,7 @@ routes.delete("/etapas/remove", etapaController.removeUserFromEtapaControl);
 routes.post("/tarefa", tarefa.createTarefaControl);
 routes.put("/tarefa", tarefa.updateTarefaControl);
 routes.get("/tarefa/:etapa_id", tarefa.getTarefasControl);
+routes.delete("/tarefa/:tarefa_id", tarefa.deleteTarefaControl)
 
 //TAREFAS_USUARIO
 routes.post("/tarefa_usuario/associate", tarefa_user.associateTarefaUsuarioControl)
