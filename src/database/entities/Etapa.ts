@@ -42,8 +42,9 @@ export class Etapa {
     @JoinColumn({ name: "proj_id" })
     projeto!: Projeto;
 
-    @OneToMany(() => Tarefa, tarefa => tarefa.etapa)
-    tarefas!: Tarefa
+    @OneToMany(() => Tarefa, tarefa => tarefa.etapa, { cascade: true, onDelete: 'CASCADE' })
+    tarefas!: Tarefa[];
+    
 
     @ManyToMany(() => Usuario, usuario => usuario.etapas)
     usuarios!: Usuario[]

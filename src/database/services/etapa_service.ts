@@ -100,16 +100,25 @@ export class EtapaService {
         });
     }
     
-    // Remover uma etapa pelo ID
-    async deleteEtapa(etapaId: number): Promise<void> {
-        const etapa = await this.etapaRepository.findOneBy({ etapa_id: etapaId });
-
+    async deleteEtapa(etapaId: number): Promise<{ message: string }> {
+        const etapa = await this.etapaRepository.findOne({
+            where: { etapa_id: etapaId },
+            relations: ["usuarios", "tarefas"],
+        });
+    
         if (!etapa) {
-            throw new Error("Etapa não encontrada");
+            throw new Error(`Etapa com ID ${etapaId} não encontrada.`);
         }
-
-        await this.etapaRepository.remove(etapa);
+    
+        // Limpar relação com usuários
+        etapa.usuarios = [];
+        await this.etapaRepository.save(etapa);
+    
+        // Deletar a etapa (tarefas serão removidas em cascata)
+        await this.etapaRepository.delete(etapaId);
+    
+        return { message: `Etapa com ID ${etapaId} removida com sucesso.` };
     }
-
+    
     
 }

@@ -38,9 +38,10 @@ export class Tarefa{
     })
     tarefa_status!: boolean
 
-    @ManyToOne(() => Etapa, etapa => etapa.etapa_id)
-    @JoinColumn({ name: "etapa_id" })
-    etapa!: Etapa
+    @ManyToOne(() => Etapa, etapa => etapa.tarefas, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'etapa_id' })
+    etapa!: Etapa;
+    
 
     @OneToMany(() => Subtarefa, subtarefa => subtarefa.tarefa)
     subtarefas!: Subtarefa[]
