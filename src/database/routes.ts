@@ -78,7 +78,7 @@ routes.post("/area_atuacao", area_atuacao.createAreaAtuacaoControl);
 routes.put("/area_atuacao", area_atuacao.updateAreaAtuacaoControl);
 routes.get("/area_atuacao", area_atuacao.getAreaAtuacaoControl);
 routes.get("/area_atuacao/projeto/:proj_id", area_atuacao.getAreaAtuacaoByProjetoIdControl);
-routes.delete("/area_atuacao/:area_atuacao_id", area_atuacao.getAreaAtuacaoControl);
+routes.delete("/area_atuacao/:area_atuacao_id", area_atuacao.deleteAreaAtuacaoControl);
 
 
 //SUBTAREFAS

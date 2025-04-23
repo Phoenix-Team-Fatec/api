@@ -21,7 +21,7 @@ export class AreaAtuacaoController{
         try{
             const{area_atuacao_nome} = req.body
             const area_atuacao = await this.areaAtuacaoService.createAreaAtuacao(area_atuacao_nome)
-            res.status(400).json(area_atuacao)
+            res.status(200).json(area_atuacao)
         }catch(error:any){
             res.status(400).json({message: error.message});
 
@@ -32,7 +32,7 @@ export class AreaAtuacaoController{
         try{
             const{area_atuacao_id} = req.params
             const area_atuacao = await this.areaAtuacaoService.deleteAreaAtuacao(Number(area_atuacao_id));
-            res.status(400).json(area_atuacao);
+            res.status(200).json(area_atuacao);
         }catch(error:any){
             res.status(400).json({message: error.message});
         }
@@ -42,7 +42,7 @@ export class AreaAtuacaoController{
         try{
             const{area_atuacao_id, area_atuacao_nome} = req.body
             const area_atuacao = await this.areaAtuacaoService.updateAreaAtuacao(area_atuacao_id,area_atuacao_nome)
-            res.status(400).json(area_atuacao);
+            res.status(200).json(area_atuacao);
         }catch(error:any){
             res.status(400).json({message: error.message});
          }
@@ -51,7 +51,7 @@ export class AreaAtuacaoController{
     async getAreaAtuacaoControl(req:Request, res:Response):Promise<void>{
         try{
             const area_atuacao = await this.areaAtuacaoService.getAreaAtuacao()
-            res.status(400).json(area_atuacao);
+            res.status(200).json(area_atuacao);
         }catch(error:any){
             res.status(400).json({message: error.message});
         }
@@ -61,7 +61,7 @@ export class AreaAtuacaoController{
         try{
             const {proj_id} = req.params
             const area_atuacao = await this.areaAtuacaoService.getAreaAtuacaoByProjetoId(Number(proj_id))
-            res.status(400).json(area_atuacao);
+            res.status(200).json(area_atuacao);
         }catch(error:any){
             res.status(400).json({message: error.message});
         }
