@@ -20,7 +20,6 @@ export class ProjetoController{
     }
 
     async createProjeto(req: Request, res: Response): Promise<Response>{
-<<<<<<< HEAD
         const date = new Date()
 
         let area_atuacao = null
@@ -33,26 +32,15 @@ export class ProjetoController{
         }
         
         const new_data = {
-            ...req.body,
-            proj_data_inicio: date,
-            proj_excluido: false,
-            proj_status: 0,
-            area_atuacao
-
-        }
-=======
-        
-        const new_data = {
-            proj_nome: req.body.proj_nome, // Corrigido para pegar o campo correto
+            proj_nome: req.body.proj_nome,
             proj_descricao: req.body.proj_descricao,
             proj_area_atuacao: req.body.proj_area_atuacao,
             proj_data_inicio: new Date(req.body.proj_data_inicio),
             proj_data_fim: new Date(req.body.proj_data_fim),
             proj_excluido: false,
             proj_status: 0
-          };
+        };
 
->>>>>>> fixingProjectClasses
         try {
             const project = await this.service.createProjeto(new_data)
             console.log(new_data)
