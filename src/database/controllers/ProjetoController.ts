@@ -33,7 +33,6 @@ export class ProjetoController{
         
         const new_data = {
             ...req.body,
-            proj_data_inicio: date,
             proj_excluido: false,
             proj_status: 0,
             area_atuacao

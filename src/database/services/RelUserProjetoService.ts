@@ -15,16 +15,33 @@ export class RelUserProjetoService {
         this.relUserProj = AppDataSource.getRepository(RelUserProjeto)
     }
 
-    async createRelUserProjeto(user_id: number, proj_id: number, coordenador: string): Promise<Usuario> {
-        let boolCoord = Boolean(coordenador)
-        const user = await this.userRepo.findOne({
-            where: { user_id},
-            relations: ['projetos']
-        })
-        if (!user){
-            throw new Error('Usuário não encontrado')
-        }
+    async createRelUserProjeto(proj_id: number, coordenador: boolean, user_email: string, user_id?: number): Promise<Usuario> {
+        let user: Usuario | null = null;
 
+        if (user_id) {
+            user = await this.userRepo.findOne({
+                where: { user_id },
+                relations: ['projetos']
+            })
+            if (!user) {
+                throw new Error('Usuário não encontrado')
+            }
+        } else {
+            user = await this.userRepo.findOne({
+                where: { user_email }
+            });
+
+            if (!user) {
+                user = this.userRepo.create({
+                    user_email,
+                    user_nome: "",
+                    registrado: false
+                });
+
+                await this.userRepo.save(user);
+            }
+        }
+        
         const project = await this.projRepo.findOne({
             where: { proj_id }
         })
@@ -35,7 +52,7 @@ export class RelUserProjetoService {
         const relation = this.relUserProj.create({
             user_id: user.user_id,
             proj_id,
-            coordenador: boolCoord
+            coordenador
         })
 
         await this.relUserProj.save(relation)
@@ -86,6 +103,34 @@ export class RelUserProjetoService {
             .groupBy("projeto.proj_id, relUserProj.coordenador")
             .getRawMany();
     }
+
+    //ver onde essa função pode ser usada
+
+    // async getRelUserProjetoByUser(user_id: number): Promise<any[]> {
+    //     const projetos = await this.projRepo
+    //         .createQueryBuilder("projeto")
+    //         .innerJoin(
+    //             RelUserProjeto,
+    //             "relUserProj",
+    //             "relUserProj.proj_id = projeto.proj_id"
+    //         )
+    //         .innerJoin(Usuario, "usuario", "usuario.user_id = relUserProj.user_id")
+    //         .where("usuario.user_id = :user_id", { user_id })
+    //         .andWhere("projeto.proj_excluido = false")
+    //         .select([
+    //             "projeto.proj_id",
+    //             "projeto.proj_nome",
+    //             "projeto.proj_descricao",
+    //             "projeto.proj_area_atuacao",
+    //             "projeto.proj_data_inicio",
+    //             "projeto.proj_data_fim",
+    //             "projeto.proj_status",
+    //             "relUserProj.coordenador"
+    //         ])
+    //         .getRawMany();
+
+    //     return projetos;
+    // }
 
 
 
