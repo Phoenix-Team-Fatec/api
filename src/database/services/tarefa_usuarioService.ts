@@ -29,6 +29,7 @@ export class TarefaUsuarioService{
      //função para associar um usuário a uma tarefa
      async associateTarefaUsuario(tarefa_id:number, user_id:number):Promise<Usuario>{
 
+        console.log("diasdiasduiaduia", tarefa_id, user_id)
         const usuario = await this.usuarioRepository.findOne({
             where: { user_id: user_id },
             relations: ["tarefas"]

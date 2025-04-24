@@ -20,8 +20,9 @@ export class TarefaUsuarioController{
 
         try{
 
-            const{tarefa_id, usuario_id} = req.body
-            const tarefa_usuario = await this.tarefa_usuarioService.associateTarefaUsuario(tarefa_id, usuario_id)
+            const{tarefa_id, user_id} = req.body
+
+            const tarefa_usuario = await this.tarefa_usuarioService.associateTarefaUsuario(tarefa_id, user_id)
             res.status(201).json(tarefa_usuario)
 
         }catch(error:any){

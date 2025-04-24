@@ -39,12 +39,26 @@ export class TarefaService{
 
 
     //função para pegar tarefas em uma etapa
-    async getTarefas(etapa_id:number):Promise<Tarefa[]>{
+    async getTarefasByEtapa(etapa_id:number):Promise<Tarefa[]>{
 
         if(etapa_id){
             return await this.tarefaRepository.find({
                 where: {
                     etapa: {etapa_id},
+                },
+                relations:['usuarios']
+            });
+        }
+    }
+
+
+    //função para pegar uma tarefa
+    async getTarefa(tarefa_id:number):Promise<Tarefa[]>{
+
+        if(tarefa_id){
+            return await this.tarefaRepository.find({
+                where: {
+                    tarefa_id: tarefa_id,
                 },
                 relations:['usuarios']
             });
