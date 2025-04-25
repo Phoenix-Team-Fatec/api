@@ -39,10 +39,14 @@ export class Subtarefa{
     })
     subtarefa_status!: boolean
 
-    @ManyToOne(() => Tarefa, tarefa => tarefa.subtarefas)
+    @ManyToOne(() => Tarefa, tarefa => tarefa.subtarefas,{
+        onDelete:'CASCADE'
+    })
     @JoinColumn({ name: "tarefa_id" })
     tarefa!: Tarefa
 
-    @ManyToOne(() => Usuario, usuario => usuario.subtarefas)
+    @ManyToOne(() => Usuario, usuario => usuario.subtarefas,{
+        onDelete:'CASCADE'
+    })
     usuarios!: Usuario[]
 }
