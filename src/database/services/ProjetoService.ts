@@ -61,4 +61,5 @@ export class ProjetoService {
         })
         return await this.projectRepo.findOneBy({proj_id: id})
     }
+    
 }
