@@ -1,10 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, JoinTable } from "typeorm"
 import { Subtarefa } from "./Subtarefa"
 import { Etapa } from "./Etapa"
 import { Usuario } from "./Usuario"
 
 @Entity()
-export class Tarefa{
+export class Tarefa {
     @PrimaryGeneratedColumn()
     tarefa_id!: number
 
@@ -46,5 +46,10 @@ export class Tarefa{
     subtarefas!: Subtarefa[]
 
     @ManyToMany(() => Usuario, usuario => usuario.tarefas)
-    usuarios!: Usuario[]
+    @JoinTable({
+        name: 'tarefa_usuario',      
+        joinColumn: { name: 'tarefa_id', referencedColumnName: 'tarefa_id' },
+        inverseJoinColumn: { name: 'user_id', referencedColumnName: 'user_id' },
+    })
+    usuarios: Usuario[];
 }

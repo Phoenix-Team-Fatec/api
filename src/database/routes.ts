@@ -73,7 +73,9 @@ routes.delete("/tarefa/:tarefa_id", tarefa.deleteTarefaControl)
 //TAREFAS_USUARIO
 routes.post("/tarefa_usuario/associate", tarefa_user.associateTarefaUsuarioControl)
 routes.post("/tarefa_usuario/remove_usuario", tarefa_user.removeTarefaUsuarioControl)
+routes.get("/tarefa_usuario/user/associated/:tarefa_id", tarefa_user.getUsuarioTarefaControl)
 routes.get("/tarefa_usuario/:usuario_id", tarefa_user.getTarefaUsuarioControl)
+routes.delete("/tarefa_usuario/remove/user/:tarefa_id/:usuario_id", tarefa_user.deleteUsuarioTarefaControl)
 
 //AREAS DE ATUAÇÃO
 routes.post("/area_atuacao", area_atuacao.createAreaAtuacaoControl);
