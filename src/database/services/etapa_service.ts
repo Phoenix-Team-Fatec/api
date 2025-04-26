@@ -57,6 +57,19 @@ export class EtapaService {
         return await this.etapaRepository.save(etapa);
     }
 
+    async getEtapaById(etapaId: number): Promise<Etapa> {
+        const etapa = await this.etapaRepository.findOne({
+            where: { etapa_id: etapaId },
+            relations: ["projeto", "tarefas", "usuarios"]
+        });
+    
+        if (!etapa) {
+            throw new Error("Etapa não encontrada");
+        }
+    
+        return etapa;
+    }
+
     // Atribuir usuário a uma etapa
     async assignUserToEtapa(userId: number, etapaId: number): Promise<Usuario> {
         const usuario = await this.usuarioRepository.findOne({
@@ -95,7 +108,7 @@ export class EtapaService {
 
     async getAllEtapas(proj_id: number): Promise<Etapa[]> {
         return await this.etapaRepository.find({ 
-            where: { projeto: { proj_id } }, // Correção aqui
+            where: { projeto: { proj_id } },
             relations: ["tarefas", "usuarios"] 
         });
     }

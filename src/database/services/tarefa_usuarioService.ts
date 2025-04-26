@@ -11,17 +11,16 @@ export class TarefaUsuarioService {
 
     //Função para usuário ver suas tarefas
     async getTarefaUsuario(usuario_id: number): Promise<Tarefa[]> {
-
         const usuario = await this.usuarioRepository.findOne({
             where: { user_id: usuario_id },
-            relations: ["tarefas"]
+            relations: ["tarefas", "tarefas.etapa"] // Adicione "tarefas.etapa" aqui
         });
-
+    
         if (!usuario) {
             throw new Error("Usuário não encontrado");
         }
-
-        return usuario.tarefas
+    
+        return usuario.tarefas;
     }
 
 
