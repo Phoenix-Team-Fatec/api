@@ -66,24 +66,43 @@ export class TarefaService{
     }
 
 
-    //função para deletar uma tarefa
-    async deleteTarefa(tarefa_id:number):Promise<Tarefa>{
-        
-        const tarefa = await this.tarefaRepository.findOneBy({tarefa_id})
+    async deleteTarefa(tarefa_id: number): Promise<void> {
+        const tarefa = await this.tarefaRepository.findOne({
+            where: { tarefa_id },
+            relations: ["usuarios", "subtarefas"]
+        });
 
-        if(tarefa){
-            return await this.tarefaRepository.remove(tarefa)
+        if (!tarefa) {
+            throw new Error("Tarefa não encontrada");
         }
+
+        await AppDataSource.manager.transaction(async (transactionalEntityManager) => {
+
+            if (tarefa.usuarios && tarefa.usuarios.length > 0) {
+                for (const usuario of tarefa.usuarios) {
+                    await this.removeUserFromTask(tarefa_id, usuario.user_id, transactionalEntityManager);
+                }
+            }
+            if (tarefa.subtarefas && tarefa.subtarefas.length > 0) {
+                await transactionalEntityManager.remove(tarefa.subtarefas);
+            }
+            await transactionalEntityManager.remove(tarefa);
+        });
     }
 
+    private async removeUserFromTask(
+        tarefa_id: number,
+        user_id: number,
+        transactionalEntityManager = AppDataSource.manager
+    ): Promise<void> {
+        const usuario = await transactionalEntityManager.findOne(Usuario, {
+            where: { user_id },
+            relations: ["tarefas"]
+        });
 
-   
+        if (!usuario) return;
 
-
-
-    
-
-
-
-
+        usuario.tarefas = usuario.tarefas.filter(t => t.tarefa_id !== tarefa_id);
+        await transactionalEntityManager.save(usuario);
+    }
 }
