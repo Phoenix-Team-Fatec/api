@@ -43,7 +43,7 @@ export class Etapa {
     projeto!: Projeto;
 
     @OneToMany(() => Tarefa, tarefa => tarefa.etapa)
-    tarefas!: Tarefa
+    tarefas!: Tarefa[];
 
     @ManyToMany(() => Usuario, usuario => usuario.etapas)
     usuarios!: Usuario[]
