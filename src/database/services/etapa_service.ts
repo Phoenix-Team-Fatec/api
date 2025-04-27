@@ -2,10 +2,11 @@ import { AppDataSource } from "../../ormconfig";
 import { Etapa } from "../entities/Etapa";
 import { Usuario } from "../entities/Usuario";
 import { Repository } from "typeorm";
-
+import { Tarefa } from "../entities/Tarefa";
 export class EtapaService {
     private etapaRepository: Repository<Etapa>;
     private usuarioRepository: Repository<Usuario>;
+    
 
     constructor() {
         this.etapaRepository = AppDataSource.getRepository(Etapa);
@@ -57,6 +58,19 @@ export class EtapaService {
         return await this.etapaRepository.save(etapa);
     }
 
+    async getEtapaById(etapaId: number): Promise<Etapa> {
+        const etapa = await this.etapaRepository.findOne({
+            where: { etapa_id: etapaId },
+            relations: ["projeto", "tarefas", "usuarios"]
+        });
+    
+        if (!etapa) {
+            throw new Error("Etapa não encontrada");
+        }
+    
+        return etapa;
+    }
+
     // Atribuir usuário a uma etapa
     async assignUserToEtapa(userId: number, etapaId: number): Promise<Usuario> {
         const usuario = await this.usuarioRepository.findOne({
@@ -95,21 +109,40 @@ export class EtapaService {
 
     async getAllEtapas(proj_id: number): Promise<Etapa[]> {
         return await this.etapaRepository.find({ 
-            where: { projeto: { proj_id } }, // Correção aqui
+            where: { projeto: { proj_id } },
             relations: ["tarefas", "usuarios"] 
         });
     }
     
     // Remover uma etapa pelo ID
     async deleteEtapa(etapaId: number): Promise<void> {
-        const etapa = await this.etapaRepository.findOneBy({ etapa_id: etapaId });
-
+        const etapa = await this.etapaRepository.findOne({
+            where: { etapa_id: etapaId },
+            relations: ["tarefas", "tarefas.usuarios"], // carrega tarefas e usuários
+        });
+    
         if (!etapa) {
             throw new Error("Etapa não encontrada");
         }
-
-        await this.etapaRepository.remove(etapa);
-    }
-
     
+        const tarefaRepository = AppDataSource.getRepository(Tarefa);
+    
+        if (etapa.tarefas.length > 0) {
+            for (const tarefa of etapa.tarefas) {
+                // 1º: Remove manualmente os vínculos da tabela de ligação (responsavel_user_tarefa)
+                await AppDataSource
+                    .createQueryBuilder()
+                    .delete()
+                    .from("responsavel_user_tarefa")
+                    .where("tarefa_id = :tarefaId", { tarefaId: tarefa.tarefa_id })
+                    .execute();
+    
+                // 2º: Agora pode remover a tarefa
+                await tarefaRepository.remove(tarefa);
+            }
+        }
+    
+        // Por fim, remove a etapa
+        await this.etapaRepository.remove(etapa);
+    }    
 }

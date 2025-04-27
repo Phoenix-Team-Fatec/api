@@ -4,35 +4,53 @@ import { Usuario } from "../entities/Usuario";
 import { Projeto } from "../entities/Projeto";
 import { RelUserProjeto } from "../entities/RelUserProjeto";
 
-export class RelUserProjetoService{
+export class RelUserProjetoService {
     private userRepo: Repository<Usuario>
     private projRepo: Repository<Projeto>
     private relUserProj: Repository<RelUserProjeto>
 
-    constructor(){
+    constructor() {
         this.userRepo = AppDataSource.getRepository(Usuario)
         this.projRepo = AppDataSource.getRepository(Projeto)
         this.relUserProj = AppDataSource.getRepository(RelUserProjeto)
     }
 
-    async createRelUserProjeto(user_id: number, proj_id: number, coordenador: boolean): Promise<Usuario> {
-        const user = await this.userRepo.findOne({
-            where: { user_id},
-            relations: ['projetos']
-        })
-        if (!user){
-            throw new Error('Usuário não encontrado')
-        }
+    async createRelUserProjeto(proj_id: number, coordenador: boolean, user_email: string, user_id?: number): Promise<Usuario> {
+        let user: Usuario | null = null;
 
+        if (user_id) {
+            user = await this.userRepo.findOne({
+                where: { user_id },
+                relations: ['projetos']
+            })
+            if (!user) {
+                throw new Error('Usuário não encontrado')
+            }
+        } else {
+            user = await this.userRepo.findOne({
+                where: { user_email }
+            });
+
+            if (!user) {
+                user = this.userRepo.create({
+                    user_email,
+                    user_nome: "",
+                    registrado: false
+                });
+
+                await this.userRepo.save(user);
+            }
+        }
+        
         const project = await this.projRepo.findOne({
-            where: { proj_id}
+            where: { proj_id }
         })
-        if (!project){
+        if (!project) {
             throw new Error('Projeto nãõ encontrado')
         }
 
         const relation = this.relUserProj.create({
-            user_id,
+            user_id: user.user_id,
             proj_id,
             coordenador
         })
@@ -45,39 +63,86 @@ export class RelUserProjetoService{
     }
 
     async getRelUserProjetoByUser(user_id: number): Promise<any[]> {
-        const projetos = await this.projRepo
-            .createQueryBuilder("projeto")
-            .innerJoin(
-                RelUserProjeto,
-                "relUserProj",
-                "relUserProj.proj_id = projeto.proj_id"
-            )
-            .innerJoin(Usuario, "usuario", "usuario.user_id = relUserProj.user_id")
-            .where("usuario.user_id = :user_id", { user_id })
-            .andWhere("projeto.proj_excluido = false")
-            .select([
-                "projeto.proj_id",
-                "projeto.proj_nome",
-                "projeto.proj_descricao",
-                "projeto.proj_area_atuacao",
-                "projeto.proj_data_inicio",
-                "projeto.proj_data_fim",
-                "projeto.proj_status",
-                "relUserProj.coordenador"
-            ])
-            .getRawMany();
-    
-        return projetos;
+        return await this.projRepo
+        .createQueryBuilder("projeto")
+        .innerJoin(
+            RelUserProjeto,
+            "relUserProj",
+            "relUserProj.proj_id = projeto.proj_id AND relUserProj.user_id = :user_id",
+            { user_id }
+        )
+        .leftJoin(
+            RelUserProjeto,
+            "relUsersProj",
+            "relUsersProj.proj_id = projeto.proj_id"
+        )
+        .leftJoin(
+            Usuario,
+            "usuario",
+            "usuario.user_id = relUsersProj.user_id"
+        )
+        .where("projeto.proj_excluido = false") // Apenas projetos não deletados
+        .select([
+            "projeto.proj_id",
+            "projeto.proj_nome",
+            "projeto.proj_descricao",
+            "projeto.proj_area_atuacao",
+            "projeto.proj_data_inicio",
+            "projeto.proj_data_fim",
+            "projeto.proj_status",
+            "projeto.proj_excluido",
+            "projeto.proj_valor_total",
+            "projeto.area_atuacao_id",
+            "relUserProj.coordenador as is_coordenador",
+            "JSON_AGG(DISTINCT jsonb_build_object(" +
+                "'user_id', usuario.user_id, " +
+                "'user_nome', usuario.user_nome, " +
+                "'user_sobrenome', usuario.user_sobrenome, " +
+                "'user_email', usuario.user_email, " +
+                "'user_foto', usuario.user_foto, " +
+                "'coordenador', relUsersProj.coordenador" +
+            ")) as usuarios"
+        ])
+        .groupBy("projeto.proj_id, relUserProj.coordenador")
+        .getRawMany();
     }
-    
-    
+
+    //ver onde essa função pode ser usada
+
+    // async getRelUserProjetoByUser(user_id: number): Promise<any[]> {
+    //     const projetos = await this.projRepo
+    //         .createQueryBuilder("projeto")
+    //         .innerJoin(
+    //             RelUserProjeto,
+    //             "relUserProj",
+    //             "relUserProj.proj_id = projeto.proj_id"
+    //         )
+    //         .innerJoin(Usuario, "usuario", "usuario.user_id = relUserProj.user_id")
+    //         .where("usuario.user_id = :user_id", { user_id })
+    //         .andWhere("projeto.proj_excluido = false")
+    //         .select([
+    //             "projeto.proj_id",
+    //             "projeto.proj_nome",
+    //             "projeto.proj_descricao",
+    //             "projeto.proj_area_atuacao",
+    //             "projeto.proj_data_inicio",
+    //             "projeto.proj_data_fim",
+    //             "projeto.proj_status",
+    //             "relUserProj.coordenador"
+    //         ])
+    //         .getRawMany();
+
+    //     return projetos;
+    // }
+
+
 
     async getRelUserProjetoByProjeto(proj_id: number): Promise<Usuario[]> {
         const project = await this.projRepo.findOne({
-            where: {proj_id},
+            where: { proj_id },
             relations: ['usuarios']
         })
-        if (!project){
+        if (!project) {
             throw new Error("Projeto não encontrado")
         }
 

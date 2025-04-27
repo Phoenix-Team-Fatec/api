@@ -68,6 +68,15 @@ export class EtapaController {
             res.status(500).json({ message: error.message });
         }
     }
+    async getEtapaById(req: Request, res: Response): Promise<void> {
+        try {
+            const { etapaId } = req.params;
+            const etapa = await this.etapaService.getEtapaById(Number(etapaId));
+            res.status(200).json(etapa);
+        } catch (error: any) {
+            res.status(404).json({ message: error.message });
+        }
+    }
     // Remover uma etapa pelo ID
     async deleteEtapaControl(req: Request, res: Response): Promise<void> {
         try {

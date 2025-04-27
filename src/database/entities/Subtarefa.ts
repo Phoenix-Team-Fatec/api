@@ -17,17 +17,19 @@ export class Subtarefa{
     @Column({
         type: "varchar",
         length: 100,
+        nullable: true
     })
     subtarefa_descricao!: string
 
     @Column({
         type: "date",
-        nullable: false
+        nullable: true
     })
     subtarefa_data_inicio!: Date
 
     @Column({
-        type: "date"
+        type: "date",
+        nullable: true
     })
     subtarefa_data_fim!: Date
 
@@ -37,10 +39,14 @@ export class Subtarefa{
     })
     subtarefa_status!: boolean
 
-    @ManyToOne(() => Tarefa, tarefa => tarefa.subtarefas)
+    @ManyToOne(() => Tarefa, tarefa => tarefa.subtarefas,{
+        onDelete:'CASCADE'
+    })
     @JoinColumn({ name: "tarefa_id" })
     tarefa!: Tarefa
 
-    @ManyToOne(() => Usuario, usuario => usuario.subtarefas)
+    @ManyToOne(() => Usuario, usuario => usuario.subtarefas,{
+        onDelete:'CASCADE'
+    })
     usuarios!: Usuario[]
 }

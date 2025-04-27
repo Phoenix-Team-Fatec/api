@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne,OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import { Etapa } from "./Etapa"
 import { Usuario } from "./Usuario"
+import { AreaAtuacao } from "./AreaAtuacao"
 
 @Entity()
 export class Projeto{
@@ -48,6 +49,38 @@ export class Projeto{
         nullable: false
     })
     proj_excluido!: boolean
+
+
+    @Column({
+        type: "text",
+        array: true,
+        nullable: true,
+        default: () => "'{}'"
+    })
+    proj_inst_parceiras!: string[]
+
+
+    @Column({
+        type: "text",
+        array: true,
+        nullable: true,
+        default: () => "'{}'"
+    })
+    proj_inst_financiadoras!: string[]
+
+
+    
+    @Column({
+        type: "double precision",
+        nullable:true
+    })
+    proj_valor_total!: number
+
+
+
+    @ManyToOne(() => AreaAtuacao, areaAtuacao => areaAtuacao.projeto, { nullable: true })
+    @JoinColumn({ name: "area_atuacao_id" })
+    area_atuacao!: AreaAtuacao | null;
 
     @OneToMany(() => Etapa, etapa => etapa.projeto)
     etapas!: Etapa[]
