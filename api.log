@@ -1,0 +1,74 @@
+2025-04-14 08:40:58,754 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-04-14 08:40:58,754 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-14 08:40:58,754 - werkzeug - INFO -  * Restarting with stat
+2025-04-14 08:40:59,388 - werkzeug - WARNING -  * Debugger is active!
+2025-04-14 08:40:59,398 - werkzeug - INFO -  * Debugger PIN: 113-619-121
+2025-04-14 08:41:42,231 - werkzeug - INFO - 127.0.0.1 - - [14/Apr/2025 08:41:42] "OPTIONS /interpretar HTTP/1.1" 200 -
+2025-04-14 08:41:42,480 - __main__ - INFO - Recebido comando para interpretar: Crie um projeto chamado "Projeto" e uma descrição chamada "Descrição""
+2025-04-14 08:41:42,480 - __main__ - INFO - Enviando prompt para Ollama: 
+    Você é um assistente que converte comandos em português para chamadas de função estruturadas.
+    
+    ## Funções disponíveis:
+    [
+  {
+    "name": "criar_projeto",
+    "description": "Cria um n...
+2025-04-14 08:42:08,316 - __main__ - INFO - Resposta recebida do Ollama
+2025-04-14 08:42:08,318 - __main__ - INFO - Resposta bruta da IA: **Função mais adequada:**
+
+A função mais adequada para este comando é:
+
+```
+{
+    "funcao": "criar_projeto",
+    "parametros": {
+        "nome": "Projeto",
+        "descricao": "Descrição do projeto"
+    }
+}
+```
+
+**Parâmetros:**
+
+* **nome**: "Projeto"
+* **descricao**: "Descrição do projeto"
+2025-04-14 08:42:08,338 - __main__ - ERROR - Erro de validação na resposta da IA: 1 validation error for FunctionCall
+__root__
+  Expecting value: line 1 column 1 (char 0) [type=value_error.jsondecode, input_value='**Função mais adequada...Descrição do projeto"', input_type=str]
+2025-04-14 08:42:08,340 - werkzeug - INFO - 127.0.0.1 - - [14/Apr/2025 08:42:08] "[35m[1mPOST /interpretar HTTP/1.1[0m" 500 -
+2025-04-14 08:42:50,972 - werkzeug - INFO - 127.0.0.1 - - [14/Apr/2025 08:42:50] "OPTIONS /interpretar HTTP/1.1" 200 -
+2025-04-14 08:42:51,241 - __main__ - INFO - Recebido comando para interpretar: Crie um projeto chamado Sistema de IA com descrição Desenvolvimento de modelos de IA
+2025-04-14 08:42:51,241 - __main__ - INFO - Enviando prompt para Ollama: 
+    Você é um assistente que converte comandos em português para chamadas de função estruturadas.
+    
+    ## Funções disponíveis:
+    [
+  {
+    "name": "criar_projeto",
+    "description": "Cria um n...
+2025-04-14 08:43:07,006 - __main__ - INFO - Resposta recebida do Ollama
+2025-04-14 08:43:07,008 - __main__ - INFO - Resposta bruta da IA: **Função mais adequada:**
+
+**função**: "criar_projeto"
+
+**Parâmetros**:
+
+* **nome**: "Sistema de IA"
+* **descricao**: "Desenvolvimento de modelos de IA"
+
+**JSON completo:**
+
+```json
+{
+  "funcao": "criar_projeto",
+  "parametros": {
+    "nome": "Sistema de IA",
+    "descricao": "Desenvolvimento de modelos de IA"
+  }
+}
+```
+2025-04-14 08:43:07,009 - __main__ - ERROR - Erro de validação na resposta da IA: 1 validation error for FunctionCall
+__root__
+  Expecting value: line 1 column 1 (char 0) [type=value_error.jsondecode, input_value='**Função mais adequada...los de IA"\n  }\n}\n```', input_type=str]
+2025-04-14 08:43:07,009 - werkzeug - INFO - 127.0.0.1 - - [14/Apr/2025 08:43:07] "[35m[1mPOST /interpretar HTTP/1.1[0m" 500 -
