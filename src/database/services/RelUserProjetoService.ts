@@ -4,6 +4,10 @@ import { Usuario } from "../entities/Usuario";
 import { Projeto } from "../entities/Projeto";
 import { RelUserProjeto } from "../entities/RelUserProjeto";
 
+interface UsuarioComCoordenador extends Usuario {
+    coordenador: boolean;
+}
+
 export class RelUserProjetoService {
     private userRepo: Repository<Usuario>
     private projRepo: Repository<Projeto>
@@ -41,7 +45,7 @@ export class RelUserProjetoService {
                 await this.userRepo.save(user);
             }
         }
-        
+
         const project = await this.projRepo.findOne({
             where: { proj_id }
         })
@@ -64,47 +68,47 @@ export class RelUserProjetoService {
 
     async getRelUserProjetoByUser(user_id: number): Promise<any[]> {
         return await this.projRepo
-        .createQueryBuilder("projeto")
-        .innerJoin(
-            RelUserProjeto,
-            "relUserProj",
-            "relUserProj.proj_id = projeto.proj_id AND relUserProj.user_id = :user_id",
-            { user_id }
-        )
-        .leftJoin(
-            RelUserProjeto,
-            "relUsersProj",
-            "relUsersProj.proj_id = projeto.proj_id"
-        )
-        .leftJoin(
-            Usuario,
-            "usuario",
-            "usuario.user_id = relUsersProj.user_id"
-        )
-        .where("projeto.proj_excluido = false") // Apenas projetos não deletados
-        .select([
-            "projeto.proj_id",
-            "projeto.proj_nome",
-            "projeto.proj_descricao",
-            "projeto.proj_area_atuacao",
-            "projeto.proj_data_inicio",
-            "projeto.proj_data_fim",
-            "projeto.proj_status",
-            "projeto.proj_excluido",
-            "projeto.proj_valor_total",
-            "projeto.area_atuacao_id",
-            "relUserProj.coordenador as is_coordenador",
-            "JSON_AGG(DISTINCT jsonb_build_object(" +
+            .createQueryBuilder("projeto")
+            .innerJoin(
+                RelUserProjeto,
+                "relUserProj",
+                "relUserProj.proj_id = projeto.proj_id AND relUserProj.user_id = :user_id",
+                { user_id }
+            )
+            .leftJoin(
+                RelUserProjeto,
+                "relUsersProj",
+                "relUsersProj.proj_id = projeto.proj_id"
+            )
+            .leftJoin(
+                Usuario,
+                "usuario",
+                "usuario.user_id = relUsersProj.user_id"
+            )
+            .where("projeto.proj_excluido = false") // Apenas projetos não deletados
+            .select([
+                "projeto.proj_id",
+                "projeto.proj_nome",
+                "projeto.proj_descricao",
+                "projeto.proj_area_atuacao",
+                "projeto.proj_data_inicio",
+                "projeto.proj_data_fim",
+                "projeto.proj_status",
+                "projeto.proj_excluido",
+                "projeto.proj_valor_total",
+                "projeto.area_atuacao_id",
+                "relUserProj.coordenador as is_coordenador",
+                "JSON_AGG(DISTINCT jsonb_build_object(" +
                 "'user_id', usuario.user_id, " +
                 "'user_nome', usuario.user_nome, " +
                 "'user_sobrenome', usuario.user_sobrenome, " +
                 "'user_email', usuario.user_email, " +
                 "'user_foto', usuario.user_foto, " +
                 "'coordenador', relUsersProj.coordenador" +
-            ")) as usuarios"
-        ])
-        .groupBy("projeto.proj_id, relUserProj.coordenador")
-        .getRawMany();
+                ")) as usuarios"
+            ])
+            .groupBy("projeto.proj_id, relUserProj.coordenador")
+            .getRawMany();
     }
 
     //ver onde essa função pode ser usada
@@ -137,18 +141,27 @@ export class RelUserProjetoService {
 
 
 
-    async getRelUserProjetoByProjeto(proj_id: number): Promise<Usuario[]> {
+    async getRelUserProjetoByProjeto(
+        proj_id: number
+    ): Promise<UsuarioComCoordenador[]> {
         const project = await this.projRepo.findOne({
             where: { proj_id },
             relations: ['usuarios']
-        })
-        if (!project) {
-            throw new Error("Projeto não encontrado")
-        }
+        });
+        if (!project) throw new Error("Projeto não encontrado");
 
-        return project.usuarios
+        const rels = await this.relUserProj.find({
+            where: { proj_id }
+        });
+
+        return project.usuarios.map(u => {
+            const rel = rels.find(r => r.user_id === u.user_id);
+            return {
+                ...u,
+                coordenador: rel ? rel.coordenador : false
+            };
+        });
     }
-
     async deleteRelUserProjeto(user_id: number, projeto_id: number): Promise<void> {
         const user = await this.userRepo.findOne({
             where: { user_id },

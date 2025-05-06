@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev --transpile-only src/server.ts",
     "typeorm": "ts-node-dev node_modules/typeorm/cli",
-    "migration:run": "ts-node-dev node_modules/typeorm/cli migration:run -d src/ormconfig.ts"
+    "migration:run": "ts-node-dev node_modules/typeorm/cli migration:run -d src/ormconfig.ts",
+    "migration:revert": "ts-node-dev node_modules/typeorm/cli migration:revert -d src/ormconfig.ts"
   },
   "keywords": [],
   "author": "",
