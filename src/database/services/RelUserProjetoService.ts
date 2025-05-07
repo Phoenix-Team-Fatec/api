@@ -97,6 +97,8 @@ export class RelUserProjetoService {
                 "projeto.proj_excluido",
                 "projeto.proj_valor_total",
                 "projeto.area_atuacao_id",
+                "projeto.proj_inst_parceiras",
+                "projeto.proj_inst_financiadoras",
                 "relUserProj.coordenador as is_coordenador",
                 "JSON_AGG(DISTINCT jsonb_build_object(" +
                 "'user_id', usuario.user_id, " +
