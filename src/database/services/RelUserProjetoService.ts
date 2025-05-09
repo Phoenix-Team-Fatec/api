@@ -85,7 +85,6 @@ export class RelUserProjetoService {
                 "usuario",
                 "usuario.user_id = relUsersProj.user_id"
             )
-            .where("projeto.proj_excluido = false") // Apenas projetos não deletados
             .select([
                 "projeto.proj_id",
                 "projeto.proj_nome",
