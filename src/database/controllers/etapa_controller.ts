@@ -30,7 +30,8 @@ export class EtapaController {
     async updateEtapaControl(req: Request, res: Response): Promise<void> {
         try {
             const { etapaId, etapaNome, etapaDescricao, etapaDataInicio, etapaDataFim, etapaStatus } = req.body;
-            const etapa = await this.etapaService.updateEtapa(etapaId, etapaNome, etapaDescricao, etapaDataInicio, etapaDataFim, etapaStatus);
+            const descricaoFinal = etapaDescricao === "" ? null : etapaDescricao;
+            const etapa = await this.etapaService.updateEtapa(etapaId, etapaNome, descricaoFinal, etapaDataInicio, etapaDataFim, etapaStatus);
             res.status(200).json(etapa);
         } catch (error: any) {
             res.status(400).json({ message: error.message });
