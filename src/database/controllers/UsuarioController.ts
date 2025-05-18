@@ -13,7 +13,7 @@ const usuarioService = new UsuarioService();
 export const createUsuario = async (req: MulterRequest, res: Response): Promise<Response> => {
     try {
         const { user_email, password } = req.body;
-        
+
         const existingUser = await usuarioService.getUsuarioByEmail(user_email);
         if (existingUser && existingUser.registrado) {
             return res.status(400).json({ error: "Já existe um usuário com esse email" });
@@ -112,9 +112,13 @@ export const getUsuarioById = async (req: Request, res: Response): Promise<Respo
     }
 }
 
-export const updateUsuario = async (req: Request, res: Response): Promise<Response> => {
+export const updateUsuario = async (req: MulterRequest, res: Response): Promise<Response> => {
     try {
         const id = Number(req.params.id);
+        console.log("req.file", req.file)
+        if (req.file) {
+            req.body.user_foto = `http://localhost:3000/uploads/` + req.file.filename;
+        }
         const usuario = await usuarioService.updateUsuario(id, req.body);
         if (!usuario) {
             return res.status(404).json({ error: "Usuario not found" });

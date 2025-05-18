@@ -26,7 +26,7 @@ routes.post("/usuarios/login", loginUsuario);
 routes.post("/usuarios/reset-password", resetPassword);
 routes.get("/usuarios", getUsuarios);
 routes.get("/usuarios/:id", getUsuarioById);
-routes.put("/usuarios/:id", updateUsuario);
+routes.put("/usuarios/:id", uploadUserFoto, updateUsuario);
 routes.delete("/usuarios/:id", deleteUsuario);
 
 //PROJETO
