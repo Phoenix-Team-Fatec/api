@@ -20,7 +20,6 @@ export class ProjetoService {
     async getAllProjeto(): Promise<Projeto[]>{
         return await this.projectRepo.find()
     }
-
     async getProjetoById(id: number): Promise<Projeto | null>{
         return await this.projectRepo.findOne({
             where: { proj_id: id },

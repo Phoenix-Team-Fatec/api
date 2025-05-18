@@ -35,6 +35,18 @@ export class RelUserProjetoController {
         }
     }
 
+        async getRelUserProjetoByUserExcluidos(req: Request, res: Response) {
+        const user_id = Number(req.params.user_id)
+
+        try {
+            const projects = await this.service.getRelUserProjetoByUserExcluidos(user_id)
+            res.status(200).json(projects)
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({ error: `Erro ao filtrar projetos pelo Usuário ${user_id}`, details: error })
+        }
+    }
+
     async getRelUserProjetoByProjeto(req: Request, res: Response) {
         const proj_id = Number(req.params.proj_id)
 

@@ -31,15 +31,15 @@ routes.put("/usuarios/:id", updateUsuario);
 routes.delete("/usuarios/:id", deleteUsuario);
 
 
-routes.get("/testar-limpeza", async (req, res) => {
-    try {
-        const projetoService = new ProjetoService();
-        await projetoService.limparProjetosExcluidos();
-        res.send("Limpeza de projetos excluídos executada com sucesso!");
-    } catch (error) {
-        res.status(500).send("Erro ao executar limpeza: " + error.message);
-    }
-});
+// routes.get("/testar-limpeza", async (req, res) => {
+//     try {
+//         const projetoService = new ProjetoService();
+//         await projetoService.limparProjetosExcluidos();
+//         res.send("Limpeza de projetos excluídos executada com sucesso!");
+//     } catch (error) {
+//         res.status(500).send("Erro ao executar limpeza: " + error.message);
+//     }
+// });
 
 //PROJETO
 routes.post('/projeto', projeto.createProjeto)
@@ -52,6 +52,9 @@ routes.put('/projeto/delete/:id', projeto.deleteProjeto)
 //REL_USER_PROJETO
 routes.post('/relUserProj', relUserProj.createRelUserProjeto)
 routes.get('/relUserProj/getProjs/:user_id', relUserProj.getRelUserProjetoByUser)
+routes.get(
+  '/relUserProj/getProjsExcluidos/:user_id',
+  relUserProj.getRelUserProjetoByUserExcluidos.bind(relUserProj))
 routes.get('/relUserProj/getUsers/:proj_id', relUserProj.getRelUserProjetoByProjeto)
 routes.delete('/relUserProj', relUserProj.deleteRelUserProjeto)
 
