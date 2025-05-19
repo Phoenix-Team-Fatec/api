@@ -9,6 +9,7 @@ import { AreaAtuacaoController } from "./controllers/areaAtuacaoController";
 import { EtapaController } from "./controllers/etapa_controller";
 import { SubtarefaController } from "./controllers/subtarefaController";
 import { Subtarefa_UserController } from "./controllers/subtarefa_userController";
+import { ProjetoService } from "./services/ProjetoService";
 
 const routes = Router();
 const tarefa = new TarefaController()
@@ -29,6 +30,17 @@ routes.get("/usuarios/:id", getUsuarioById);
 routes.put("/usuarios/:id", uploadUserFoto, updateUsuario);
 routes.delete("/usuarios/:id", deleteUsuario);
 
+
+// routes.get("/testar-limpeza", async (req, res) => {
+//     try {
+//         const projetoService = new ProjetoService();
+//         await projetoService.limparProjetosExcluidos();
+//         res.send("Limpeza de projetos excluídos executada com sucesso!");
+//     } catch (error) {
+//         res.status(500).send("Erro ao executar limpeza: " + error.message);
+//     }
+// });
+
 //PROJETO
 routes.post('/projeto', projeto.createProjeto)
 routes.get('/projeto/getAll', projeto.getAllProjeto)
@@ -40,7 +52,11 @@ routes.put('/projeto/delete/:id', projeto.deleteProjeto)
 //REL_USER_PROJETO
 routes.post('/relUserProj', relUserProj.createRelUserProjeto)
 routes.get('/relUserProj/getProjs/:user_id', relUserProj.getRelUserProjetoByUser)
+routes.get(
+  '/relUserProj/getProjsExcluidos/:user_id',
+  relUserProj.getRelUserProjetoByUserExcluidos.bind(relUserProj))
 routes.get('/relUserProj/getUsers/:proj_id', relUserProj.getRelUserProjetoByProjeto)
+routes.put('/resturaProj/:proj_id', relUserProj.restoreProjects)
 routes.delete('/relUserProj', relUserProj.deleteRelUserProjeto)
 
 //ETAPAS
@@ -53,7 +69,7 @@ routes.put("/etapas", etapaController.updateEtapaControl);
 // Remover uma etapa pelo ID
 routes.delete("/etapas/:etapaId", etapaController.deleteEtapaControl);
 
-// Listar todas as etapas (VERIFIQUE SE ESSE TRECHO EXISTE)
+// Listar todas as etapas 
 routes.get("/etapas/:proj_id", etapaController.getAllEtapas);
 
 routes.get("/etapa/:etapaId", etapaController.getEtapaById);

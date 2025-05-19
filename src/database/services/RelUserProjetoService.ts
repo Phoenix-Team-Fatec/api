@@ -111,7 +111,50 @@ export class RelUserProjetoService {
             .groupBy("projeto.proj_id, relUserProj.coordenador")
             .getRawMany();
     }
-
+    async getRelUserProjetoByUserExcluidos(user_id: number): Promise<any[]> {
+        return await this.projRepo
+        .createQueryBuilder("projeto")
+        .innerJoin(
+            RelUserProjeto,
+            "relUserProj",
+            "relUserProj.proj_id = projeto.proj_id AND relUserProj.user_id = :user_id",
+            { user_id }
+        )
+        .leftJoin(
+            RelUserProjeto,
+            "relUsersProj",
+            "relUsersProj.proj_id = projeto.proj_id"
+        )
+        .leftJoin(
+            Usuario,
+            "usuario",
+            "usuario.user_id = relUsersProj.user_id"
+        )
+        .where("projeto.proj_excluido = true") // Apenas projetos não deletados
+        .select([
+            "projeto.proj_id",
+            "projeto.proj_nome",
+            "projeto.proj_descricao",
+            "projeto.proj_area_atuacao",
+            "projeto.proj_data_inicio",
+            "projeto.proj_data_fim",
+            "projeto.proj_status",
+            "projeto.proj_excluido",
+            "projeto.proj_valor_total",
+            "projeto.area_atuacao_id",
+            "relUserProj.coordenador as is_coordenador",
+            "JSON_AGG(DISTINCT jsonb_build_object(" +
+                "'user_id', usuario.user_id, " +
+                "'user_nome', usuario.user_nome, " +
+                "'user_sobrenome', usuario.user_sobrenome, " +
+                "'user_email', usuario.user_email, " +
+                "'user_foto', usuario.user_foto, " +
+                "'coordenador', relUsersProj.coordenador" +
+            ")) as usuarios"
+        ])
+        .groupBy("projeto.proj_id, relUserProj.coordenador")
+        .getRawMany();
+    }
     //ver onde essa função pode ser usada
 
     // async getRelUserProjetoByUser(user_id: number): Promise<any[]> {
@@ -173,4 +216,22 @@ export class RelUserProjetoService {
 
         await this.userRepo.save(user)
     }
+
+async restoreProjeto(proj_id: number): Promise<Projeto> {
+    const projeto = await this.projRepo.findOne({
+        where: { proj_id }
+    });
+    
+    if (!projeto) {
+        throw new Error(`Projeto com ID ${proj_id} não encontrado`);
+    }
+    
+    projeto.proj_excluido = false;
+    try {
+        return await this.projRepo.save(projeto);
+    } catch (error) {
+        console.error('Erro ao salvar projeto:', error);
+        throw error;
+    }
+}
 }

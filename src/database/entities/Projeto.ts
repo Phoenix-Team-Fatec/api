@@ -50,6 +50,12 @@ export class Projeto{
     })
     proj_excluido!: boolean
 
+// Novo campo para registrar a data de exclusão
+    @Column({
+        type: "timestamp",
+        nullable: true
+    })
+    proj_data_exclusao!: Date | null;
 
     @Column({
         type: "text",
@@ -85,6 +91,8 @@ export class Projeto{
     @OneToMany(() => Etapa, etapa => etapa.projeto)
     etapas!: Etapa[]
 
-    @ManyToMany(() => Usuario, usuario => usuario.projetos)
+    @ManyToMany(() => Usuario, usuario => usuario.projetos,{
+        onDelete:'CASCADE'
+    })
     usuarios!: Usuario[]
 }
