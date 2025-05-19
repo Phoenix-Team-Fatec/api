@@ -56,6 +56,7 @@ routes.get(
   '/relUserProj/getProjsExcluidos/:user_id',
   relUserProj.getRelUserProjetoByUserExcluidos.bind(relUserProj))
 routes.get('/relUserProj/getUsers/:proj_id', relUserProj.getRelUserProjetoByProjeto)
+routes.put('/resturaProj/:proj_id', relUserProj.restoreProjects)
 routes.delete('/relUserProj', relUserProj.deleteRelUserProjeto)
 
 //ETAPAS

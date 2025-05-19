@@ -202,4 +202,22 @@ export class RelUserProjetoService {
 
         await this.userRepo.save(user)
     }
+
+async restoreProjeto(proj_id: number): Promise<Projeto> {
+    const projeto = await this.projRepo.findOne({
+        where: { proj_id }
+    });
+    
+    if (!projeto) {
+        throw new Error(`Projeto com ID ${proj_id} não encontrado`);
+    }
+    
+    projeto.proj_excluido = false;
+    try {
+        return await this.projRepo.save(projeto);
+    } catch (error) {
+        console.error('Erro ao salvar projeto:', error);
+        throw error;
+    }
+}
 }

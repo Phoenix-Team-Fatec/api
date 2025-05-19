@@ -68,4 +68,13 @@ export class RelUserProjetoController {
             return res.status(500).json({ error: 'Erro ao deletar relação', details: error })
         }
     }
+    restoreProjects = async (req: Request, res: Response) => {  // Arrow function mantém o contexto
+            try {
+                const { proj_id } = req.params;
+                await this.service.restoreProjeto(Number(proj_id))
+                return res.status(200).json('Restaurado com sucesso')
+            } catch (error) {
+                res.status(500).json({ error: 'Erro ao restaurar projeto' });
+            }
+        }
 }
