@@ -20,8 +20,15 @@ Resposta: {"action": "complete_task", "taskId": 12}
 Usuário: "Desmarque a tarefa 5"
 Resposta: {"action": "uncomplete_task", "taskId": 5}
 
-Usuário: "Conclua todas da etapa 3"
-Resposta: {"action": "complete_etapa", "etapaId": 3}
+Usuário: "Conclua todas da etapa Desenvolvimento"
+Resposta: {"action": "complete_etapa", "etapaNome": "Desenvolvimento"}
+
+Usuário: "Conclua todas da etapa 1"
+Resposta: {"action": "complete_etapa", "etapaNome": "1"}
+
+Usuário: "Finalize as tarefas da etapa Revisão"
+Resposta: {"action": "complete_etapa", "etapaNome": "Revisão"}
+
 
 Usuário: "Tarefas atrasadas?"
 Resposta: {"action": "list_overdue"}

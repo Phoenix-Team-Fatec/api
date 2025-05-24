@@ -1,5 +1,6 @@
 import { Tarefa } from "../entities/Tarefa";
 import { Usuario } from "../entities/Usuario";
+import { Etapa } from "../entities/Etapa";
 import { AppDataSource } from "../../ormconfig";
 import { LessThan } from "typeorm";
 
@@ -7,7 +8,7 @@ import { LessThan } from "typeorm";
 export class TarefaService{
 
     private tarefaRepository = AppDataSource.getRepository(Tarefa)
-    
+    private etapaRepository = AppDataSource.getRepository(Etapa);
 
     //função para criar uma tarefa
     async createTarefa(tarefa_nome:string, tarefa_descricao:string, tarefa_data_inicio:Date, tarefa_data_fim:Date, tarefa_status: boolean, etapa_id:number, pontos_historias:number):Promise<Tarefa>{
@@ -120,24 +121,51 @@ export class TarefaService{
         tarefa.tarefa_status = tarefa_status;
         return await this.tarefaRepository.save(tarefa);
     }
+async completeAllByEtapa(etapaNome: string): Promise<number> {
+    try {
+        // 1. Buscar etapa pelo NOME
+        const etapa = await this.etapaRepository.findOne({
+            where: { etapa_nome: etapaNome },
+            relations: ['tarefas']
+        });
 
-    async completeAllByEtapa(etapaId: number): Promise<number> {
+        if (!etapa) {
+            throw new Error(`Etapa "${etapaNome}" não encontrada`);
+        }
+
+        // 2. Atualizar tarefas
         const result = await this.tarefaRepository.createQueryBuilder()
-            .update(Tarefa)
+            .update()
             .set({ tarefa_status: true })
-            .where('etapa_id = :etapaId', { etapaId })
+            .where("etapa_id = :etapaId", { etapaId: etapa.etapa_id })
+            .andWhere("tarefa_status = false")
             .execute();
 
         return result.affected || 0;
+
+    } catch (error) {
+        console.error('Erro detalhado:', {
+            etapaNome,
+            erro: error.message
+        });
+        throw new Error(`Falha ao completar etapa: ${error.message}`);
     }
+}
 
     async getOverdueTasks(): Promise<Tarefa[]> {
-        const now = new Date();
-        return await this.tarefaRepository.find({
-            where: {
-                tarefa_data_fim: LessThan(now),
-                tarefa_status: false
-            }
-        });
+    const now = new Date();
+    
+    const tasks = await this.tarefaRepository.find({
+        where: {
+        tarefa_data_fim: LessThan(now),
+        tarefa_status: false
+        }
+    });
+
+    // Converter strings para Date
+    return tasks.map(task => ({
+        ...task,
+        tarefa_data_fim: new Date(task.tarefa_data_fim) // <-- Conversão aqui
+    }));
     }
 }

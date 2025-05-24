@@ -37,22 +37,22 @@ class AIController {
           }
           break;
 
+        // controllers/AIController.ts
         case 'complete_etapa':
-          if (aiResponse.etapaId) {
-            const etapaId = parseInt(aiResponse.etapaId);
-            const count = await this.tarefaService.completeAllByEtapa(etapaId);
-            responseMessage = `${count} tarefas da etapa #${etapaId} concluídas`;
+          if (aiResponse.etapaNome) {
+            const count = await this.tarefaService.completeAllByEtapa(aiResponse.etapaNome);
+            responseMessage = `Todas tarefas da etapa "${aiResponse.etapaNome}" foram concluídas`;
           }
           break;
 
-        case 'list_overdue':
-          const overdueTasks = await this.tarefaService.getOverdueTasks();
-          responseMessage = overdueTasks.length > 0 
-            ? `Tarefas atrasadas:\n${overdueTasks.map(t => 
-                `#${t.tarefa_id} ${t.tarefa_nome} (${t.tarefa_data_fim.toLocaleDateString()})`
-              ).join('\n')}`
-            : 'Nenhuma tarefa atrasada';
-          break;
+          case 'list_overdue':
+            const overdueTasks = await this.tarefaService.getOverdueTasks();
+            responseMessage = overdueTasks.length > 0 
+              ? `Tarefas atrasadas:\n${overdueTasks.map(t => 
+                  `#${t.tarefa_id} ${t.tarefa_nome} (${new Date(t.tarefa_data_fim).toLocaleDateString()})` // <-- Garantir conversão
+                ).join('\n')}`
+              : 'Nenhuma tarefa atrasada';
+            break;
 
         default:
           responseMessage = 'Não entendi o comando. Por favor, tente novamente.';
