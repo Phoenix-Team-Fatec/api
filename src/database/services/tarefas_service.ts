@@ -1,6 +1,7 @@
 import { Tarefa } from "../entities/Tarefa";
 import { Usuario } from "../entities/Usuario";
 import { AppDataSource } from "../../ormconfig";
+import { LessThan } from "typeorm";
 
 
 export class TarefaService{
@@ -105,5 +106,38 @@ export class TarefaService{
 
         usuario.tarefas = usuario.tarefas.filter(t => t.tarefa_id !== tarefa_id);
         await transactionalEntityManager.save(usuario);
+    }
+
+    async updateStatus(tarefa_id: number, tarefa_status: boolean): Promise<Tarefa> {
+        const tarefa = await this.tarefaRepository.findOne({
+            where: { tarefa_id }
+        });
+
+        if (!tarefa) {
+            throw new Error('Tarefa não encontrada');
+        }
+
+        tarefa.tarefa_status = tarefa_status;
+        return await this.tarefaRepository.save(tarefa);
+    }
+
+    async completeAllByEtapa(etapaId: number): Promise<number> {
+        const result = await this.tarefaRepository.createQueryBuilder()
+            .update(Tarefa)
+            .set({ tarefa_status: true })
+            .where('etapa_id = :etapaId', { etapaId })
+            .execute();
+
+        return result.affected || 0;
+    }
+
+    async getOverdueTasks(): Promise<Tarefa[]> {
+        const now = new Date();
+        return await this.tarefaRepository.find({
+            where: {
+                tarefa_data_fim: LessThan(now),
+                tarefa_status: false
+            }
+        });
     }
 }

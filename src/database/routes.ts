@@ -10,6 +10,7 @@ import { EtapaController } from "./controllers/etapa_controller";
 import { SubtarefaController } from "./controllers/subtarefaController";
 import { Subtarefa_UserController } from "./controllers/subtarefa_userController";
 import { ProjetoService } from "./services/ProjetoService";
+import AIController from './controllers/AIController';
 
 const routes = Router();
 const tarefa = new TarefaController()
@@ -20,6 +21,8 @@ const area_atuacao = new AreaAtuacaoController()
 const etapaController = new EtapaController();
 const subtarefa = new SubtarefaController();
 const subtarefa_user = new Subtarefa_UserController();
+
+routes.post('/ai/chat', AIController.handleChat);
 
 //USUARIO
 routes.post("/usuarios", uploadUserFoto, createUsuario);
