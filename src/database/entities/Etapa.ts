@@ -18,6 +18,7 @@ export class Etapa {
     @Column({
         type: "varchar",
         length: 100,
+        nullable:true
     })
     etapa_descricao!: string;
 

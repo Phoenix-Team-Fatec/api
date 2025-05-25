@@ -24,8 +24,8 @@ export class TarefaController{
     async createTarefaControl(req:Request, res:Response):Promise<void>{
         try{
             
-            const{nome, descricao, data_inicio, data_fim, tarefa_status, etapa_id} = req.body;
-            const tarefa = await this.tarefaService.createTarefa(nome, descricao, data_inicio, data_fim, tarefa_status, etapa_id)
+            const{nome, descricao, data_inicio, data_fim, tarefa_status, etapa_id, pontos_historias} = req.body;
+            const tarefa = await this.tarefaService.createTarefa(nome, descricao, data_inicio, data_fim, tarefa_status, etapa_id, pontos_historias)
             res.status(200).json(tarefa)
 
 
@@ -38,8 +38,8 @@ export class TarefaController{
 
         try{
 
-            const{id, nome, descricao, data_inicio, data_fim, tarefa_status, etapa_id} = req.body;
-            const tarefa = await this.tarefaService.updateTarefa(id, nome, descricao, data_inicio, data_fim, tarefa_status, etapa_id)
+            const{id, nome, descricao, data_inicio, data_fim, tarefa_status, etapa_id, pontos_historias} = req.body;
+            const tarefa = await this.tarefaService.updateTarefa(id, nome, descricao, data_inicio, data_fim, tarefa_status, etapa_id, pontos_historias)
             res.status(200).json(tarefa)
 
         }catch(error:any){

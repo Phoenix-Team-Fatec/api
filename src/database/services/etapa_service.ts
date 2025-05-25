@@ -38,7 +38,7 @@ export class EtapaService {
     async updateEtapa(
         etapaId: number,
         etapaNome?: string,
-        etapaDescricao?: string,
+        etapaDescricao?: string | null,
         etapaDataInicio?: Date,
         etapaDataFim?: Date,
         etapaStatus?: boolean
@@ -50,7 +50,7 @@ export class EtapaService {
         }
 
         if (etapaNome) etapa.etapa_nome = etapaNome;
-        if (etapaDescricao) etapa.etapa_descricao = etapaDescricao;
+        if (etapaDescricao !== undefined) etapa.etapa_descricao = etapaDescricao;
         if (etapaDataInicio) etapa.etapa_data_inicio = etapaDataInicio;
         if (etapaDataFim) etapa.etapa_data_fim = etapaDataFim;
         if (etapaStatus !== undefined) etapa.etapa_status = etapaStatus;

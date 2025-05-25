@@ -38,6 +38,13 @@ export class Tarefa {
     })
     tarefa_status!: boolean
 
+
+    @Column({
+        type: "integer",
+        nullable: true
+    })
+    pontos_historias!: number
+
     @ManyToOne(() => Etapa, etapa => etapa.etapa_id)
     @JoinColumn({ name: "etapa_id" })
     etapa!: Etapa

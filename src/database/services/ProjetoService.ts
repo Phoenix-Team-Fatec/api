@@ -10,7 +10,6 @@ export class ProjetoService {
     constructor(){
         this.projectRepo = AppDataSource.getRepository(Projeto)
         this.areaAtuacaoRepo = AppDataSource.getRepository(AreaAtuacao)
-
     }
 
     async createProjeto(data: Partial<Projeto>): Promise<Projeto>{
@@ -21,7 +20,6 @@ export class ProjetoService {
     async getAllProjeto(): Promise<Projeto[]>{
         return await this.projectRepo.find()
     }
-
     async getProjetoById(id: number): Promise<Projeto | null>{
         return await this.projectRepo.findOne({
             where: { proj_id: id },
@@ -57,9 +55,23 @@ export class ProjetoService {
 
     async deleteProjeto(id: number): Promise<Projeto>{
         await this.projectRepo.update(id, {
-            proj_excluido: true
+            proj_excluido: true,
+            proj_data_exclusao: new Date()
         })
         return await this.projectRepo.findOneBy({proj_id: id})
     }
-    
+    async limparProjetosExcluidos(): Promise<void> {
+        const trintaDiasAtras = new Date();
+        trintaDiasAtras.setDate(trintaDiasAtras.getDate() - 30);
+        
+        await this.projectRepo
+            .createQueryBuilder()
+            .delete()
+            .from(Projeto)
+            .where("proj_excluido = :excluido AND proj_data_exclusao <= :dataLimite", {
+                excluido: true,
+                dataLimite: trintaDiasAtras
+            })
+            .execute();
+    }
 }
