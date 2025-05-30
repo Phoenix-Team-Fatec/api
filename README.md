@@ -102,6 +102,7 @@ Caso queira contribuir com o projeto, siga os seguintes passos:
 5. Abra um Pull Request
 
 ---
-
+## MODELO DO BANCO DE DADOS
+![lumen_Physical_Export-2025-05-30_08-24 (1)](https://github.com/user-attachments/assets/586bccdb-12d2-4815-b74d-54a3b524b597)
 
 
