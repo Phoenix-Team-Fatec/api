@@ -106,3 +106,6 @@ Caso queira contribuir com o projeto, siga os seguintes passos:
 ![lumen_Physical_Export-2025-05-30_08-24 (1)](https://github.com/user-attachments/assets/586bccdb-12d2-4815-b74d-54a3b524b597)
 
 
+![lumen-2025-05-30_09-52](https://github.com/user-attachments/assets/fd2053c8-2171-4e43-b669-5f9d6cda03de)
+
+
